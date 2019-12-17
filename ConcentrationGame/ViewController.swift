@@ -53,8 +53,10 @@ class ViewController: UIViewController {
     
     private func setEmoji(for card: Card) -> String {
         if emojiChoices[card.identifier] == nil, emojis.count > 0 {
-            let randomIndex = Int(arc4random_uniform(UInt32(emojis.count)))
-            let emoji = emojis.remove(at: randomIndex)
+            
+            //Int extension으로 랜덤값을 가져오는 프로퍼티를 추가했기 때문에 더이상 아래 코드를 이용하지 않는다.
+            //let randomIndex = Int(arc4random_uniform(UInt32(emojis.count)))
+            let emoji = emojis.remove(at: emojis.count.arc4random)
             emojiChoices[card.identifier] = emoji
         }
         
@@ -93,3 +95,18 @@ class ViewController: UIViewController {
     }
 }
 
+//extension을 사용해 현재 존재하고있는 데이터 구조를 확장시킬 수 있다. class/struct/enum 등에 method와 properties를 추가할 수 있다.
+//extension에는 저장공간을 할당할 수 없기 때문에, let, var와 같은 저장 프로퍼티를 사용할 수 없다.
+//확장을 이용할 때는 연관성이 적은 코드들을 작성하는 것을 지양하도록 하자!
+//Int 타입에 새로운 computed property를 추가함으로서 지저분하게 보일 수 있는 코드를 정리했다. Int.arc4random 형식으로 사용한다. (ex. 100.arc4random)
+extension Int {
+    var arc4random: Int {
+        if self > 0 {   //여기서 self는 Int의 값을 의미한다.
+            return Int(arc4random_uniform(UInt32(self)))
+        } else if self < 0 {
+            return -Int(arc4random_uniform(UInt32(abs(self))))
+        } else {
+            return 0
+        }
+    }
+}
