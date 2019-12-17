@@ -10,7 +10,9 @@ import Foundation
 
 class Concentration {
     
-    var cards: [Card]
+    //ViewController에서 카드들에 대한 정보를 봐야하기 때문에 get에 대한 접근은 public으로 놓지만, 카드들에 대한 정보를 할당하거나 수정하는 것은 이 cards의 일이기 때문에 private(set)으로 설정한다.
+    //따라서 ViewController는 cards에 값을 할당할 수는 없지만 접근은 가능하다.
+    private(set) var cards: [Card]
     
     init(numberOfCardPair: Int) {
         cards = [Card]()
@@ -24,7 +26,8 @@ class Concentration {
     //뒤집어져있는 카드의 인덱스, 한 장도 뒤집어져있지 않을 경우 nil을 갖는다.
     //Computed Property를 이용해서 값을 처리한다.
     //왜? 여기서 이 값에는 어떤 인덱스를 저장하는 것이 목적이 아니고, 어떤 카드가 뒤집혀있는지, 일치하지않는 카드는 다시 뒤집어 놓는 그 행위가 중요한 것이기 때문??
-    var indexOfOneAndOnlyFaceUpCard: Int? {
+    //해당 정보를 다른 곳에서 접근할 필요가 없으므로 private로 지정한다.
+    private var indexOfOneAndOnlyFaceUpCard: Int? {
         get {
             //optional 변수는 처음 선언했을 때 기본값은 nil이다.
             var foundIndex: Int?

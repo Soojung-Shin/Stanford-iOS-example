@@ -13,9 +13,10 @@ struct Card {
     var isMatched = false
     let identifier: Int
     
-    static var identifierFactory = 0
+    //해당 구조체 밖에서 사용하지 않으므로 private 처리
+    private static var identifierFactory = 0
     
-    static func getUniqueIdentifier() -> Int {
+    private static func getUniqueIdentifier() -> Int {
         identifierFactory += 1
         return identifierFactory
     }
