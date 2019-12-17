@@ -15,6 +15,7 @@ class Concentration {
     private(set) var cards: [Card]
     
     init(numberOfCardPair: Int) {
+        assert(numberOfCardPair > 0, "Concentration.init(numberOfCardPair: \(numberOfCardPair) 에러: 적어도 한 쌍 이상의 카드를 생성하여야 합니다.")
         cards = [Card]()
         for _ in 0 ..< numberOfCardPair {
             let card = Card()
@@ -60,6 +61,9 @@ class Concentration {
     
     //카드를 선택했을 때 처리
     func chooseCard(of index: Int) {
+        //assert 함수는 assert 내부의 값이 false일 때 오류를 발생시킨다. 협업을 하는 과정에서 내부 구조를 모르는 상태에서 존재하지 않는 값에 접근하면 에러를 발생할 것이고, 어떠한 이유에 대해선지 인지하기 힘든 경우가 발생할 수도 있다. 이를 방지하기 위해 사용한다.
+        assert(cards.indices.contains(index), "Concentration.chooseCard(of: \(index)) 에러: 선택한 인덱스의 카드가 없습니다.")
+        
         if !cards[index].isMatched {
             
             //카드 한 장이 이미 뒤집어져 있을 때
