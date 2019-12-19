@@ -16,12 +16,30 @@ class ViewController: UIViewController {
     //몇 번이나 뒤집었는지에 대해서 외부에서 설정할 수 없도록 private(set)으로 설정한다.
     private(set) var flipCount = 0 {
         didSet {
-            flipCountLabel.text = "\(flipCount)"
+            //flipCountLabel.text = "\(flipCount)"
+            //didSet은 초기화 단계에서는 실행되지 않는다.
+            updateFlipCountLabel()
         }
+    }
+    
+    //flipCountLabel에 속성이 적용된 String을 text로 설정한다.
+    func updateFlipCountLabel() {
+        let attributes: [NSAttributedString.Key : Any] = [
+            .strokeColor: UIColor.orange,
+            .strokeWidth: 5.0
+        ]
+        
+        let attributedString = NSAttributedString(string: "\(flipCount)", attributes: attributes)
+        flipCountLabel.attributedText = attributedString
     }
         
     //UI 내부의 구현 방식이기 때문에 IBOutlet도 모두 private로 설정한다.
-    @IBOutlet private var flipCountLabel: UILabel!
+    @IBOutlet private var flipCountLabel: UILabel! {
+        //flipCountLabel의 초기값을 지정해주기 위해 didSet을 사용한다. Outlet에도 didSet 지정이 가능하다.
+        didSet {
+            updateFlipCountLabel()
+        }
+    }
     @IBOutlet private var cardButtons: [UIButton]!
     @IBOutlet private var resetButton: UIButton!
     
