@@ -76,7 +76,9 @@ struct Concentration {
             if let matchIndex = indexOfOneAndOnlyFaceUpCard, matchIndex != index {
                 
                 //카드 두 장의 identifier을 비교해서 같으면 isMatched를 true로 바꾼다.
-                if cards[index].identifier == cards[matchIndex].identifier {
+                //if cards[index].identifier == cards[matchIndex].identifier {
+                //Card에서 hashable 프로토콜을 구현하면서 equatable 프로토콜도 구현하였기 때문에 더이상 Concentration에서 identifier로 비교하지 않아도 된다.
+                if cards[index] == cards[matchIndex] {
                     cards[index].isMatched = true
                     cards[matchIndex].isMatched = true
                 }

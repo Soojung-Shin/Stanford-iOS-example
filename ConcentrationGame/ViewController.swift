@@ -48,19 +48,21 @@ class ViewController: UIViewController {
 
     //아래 모든 변수와 함수도 외부에서의 접근을 private로 제한한다.
     private var emojis = [ "😈", "👻", "🤡", "🍭", "🍫", "😺", "🎃", "🍬" ]
-    private var emojiChoices: [Int : String] = [:]
+    
+    //Dictionary의 키 값은 항상 Hashable 해야한다. Card에 Hashable 프로토콜을 추가했기 때문에 Dictionary의 키로 사용할 수 있게 된다.
+    private var emojiChoices: [Card : String] = [:]
 
     
     private func setEmoji(for card: Card) -> String {
-        if emojiChoices[card.identifier] == nil, emojis.count > 0 {
-            
+        if emojiChoices[card] == nil, emojis.count > 0 {
+
             //Int extension으로 랜덤값을 가져오는 프로퍼티를 추가했기 때문에 더이상 아래 코드를 이용하지 않는다.
             //let randomIndex = Int(arc4random_uniform(UInt32(emojis.count)))
             let emoji = emojis.remove(at: emojis.count.arc4random)
-            emojiChoices[card.identifier] = emoji
+            emojiChoices[card] = emoji
         }
-        
-        return emojiChoices[card.identifier] ?? "?"
+
+        return emojiChoices[card] ?? "?"
     }
     
     
@@ -88,7 +90,7 @@ class ViewController: UIViewController {
         
         flipCount = 0
         emojis = [ "😈", "👻", "🤡", "🍭", "🍫", "😺", "🎃", "🍬" ]
-        emojiChoices = [Int : String]()
+        emojiChoices = [Card : String]()
 
         updateViewFromModel()
         sender.isHidden = true
