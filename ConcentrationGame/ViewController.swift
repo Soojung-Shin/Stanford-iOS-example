@@ -47,7 +47,10 @@ class ViewController: UIViewController {
     }
 
     //아래 모든 변수와 함수도 외부에서의 접근을 private로 제한한다.
-    private var emojis = [ "😈", "👻", "🤡", "🍭", "🍫", "😺", "🎃", "🍬" ]
+    //private var emojis = [ "😈", "👻", "🤡", "🍭", "🍫", "😺", "🎃", "🍬" ]
+    //emojis를 문자열로 변경한다.
+    private var emojis = "😈👻🤡🍭🍫😺🎃🍬"
+
     
     //Dictionary의 키 값은 항상 Hashable 해야한다. Card에 Hashable 프로토콜을 추가했기 때문에 Dictionary의 키로 사용할 수 있게 된다.
     private var emojiChoices: [Card : String] = [:]
@@ -58,8 +61,12 @@ class ViewController: UIViewController {
 
             //Int extension으로 랜덤값을 가져오는 프로퍼티를 추가했기 때문에 더이상 아래 코드를 이용하지 않는다.
             //let randomIndex = Int(arc4random_uniform(UInt32(emojis.count)))
-            let emoji = emojis.remove(at: emojis.count.arc4random)
-            emojiChoices[card] = emoji
+            //let emoji = emojis.remove(at: emojis.count.arc4random)
+            //emojiChoices[card] = emoji
+            
+            //emojis를 String으로 변경했기 때문에 정수형 인덱스로 접근할 수 없다. String.Index 타입으로 변경한다.
+            let randomStringIndex = emojis.index(emojis.startIndex, offsetBy: emojis.count.arc4random)
+            emojiChoices[card] = String(emojis.remove(at: randomStringIndex))
         }
 
         return emojiChoices[card] ?? "?"
@@ -89,7 +96,7 @@ class ViewController: UIViewController {
         game = Concentration(numberOfCardPair: (cardButtons.count + 1) / 2)
         
         flipCount = 0
-        emojis = [ "😈", "👻", "🤡", "🍭", "🍫", "😺", "🎃", "🍬" ]
+        emojis = "😈👻🤡🍭🍫😺🎃🍬"
         emojiChoices = [Card : String]()
 
         updateViewFromModel()
