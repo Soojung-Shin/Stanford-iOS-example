@@ -8,7 +8,11 @@
 
 import Foundation
 
-class Concentration {
+//클래스는 reference type이다. 클래스는 복사되지 않고, 해당 클래스를 가리키는 포인터를 전달하게 된다.
+//반면 구조체는 value type이다. value type은 쓰기 시 복사하는 형태로 값을 복사한다.
+//구조체는 기본적으로 자기 자신 내부에 있는 값을 변경할 수 없기 때문에 변경하고자 할 때는 mutating라고 표시해주어야 한다.
+//class Concentration {
+struct Concentration {
     
     //ViewController에서 카드들에 대한 정보를 봐야하기 때문에 get에 대한 접근은 public으로 놓지만, 카드들에 대한 정보를 할당하거나 수정하는 것은 이 cards의 일이기 때문에 private(set)으로 설정한다.
     //따라서 ViewController는 cards에 값을 할당할 수는 없지만 접근은 가능하다.
@@ -60,7 +64,8 @@ class Concentration {
     }
     
     //카드를 선택했을 때 처리
-    func chooseCard(of index: Int) {
+    //Concentration이 구조체이기 때문에 함수에서 자기 자신의 값을 변경하고자 할 때는 'mutating'을 추가해주어야 한다.
+    mutating func chooseCard(of index: Int) {
         //assert 함수는 assert 내부의 값이 false일 때 오류를 발생시킨다. 협업을 하는 과정에서 내부 구조를 모르는 상태에서 존재하지 않는 값에 접근하면 에러를 발생할 것이고, 어떠한 이유에 대해선지 인지하기 힘든 경우가 발생할 수도 있다. 이를 방지하기 위해 사용한다.
         assert(cards.indices.contains(index), "Concentration.chooseCard(of: \(index)) 에러: 선택한 인덱스의 카드가 없습니다.")
         
@@ -104,7 +109,7 @@ class Concentration {
     
     //카드의 위치를 랜덤하게 섞는 메서드
     //cards 배열에 카드를 다 추가하고 난 후 실행할 것
-    func shuffleCard() {
+    mutating func shuffleCard() {
         cards.shuffle()
     }
     
