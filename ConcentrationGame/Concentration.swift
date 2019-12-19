@@ -34,6 +34,7 @@ struct Concentration {
     //해당 정보를 다른 곳에서 접근할 필요가 없으므로 private로 지정한다.
     private var indexOfOneAndOnlyFaceUpCard: Int? {
         get {
+            /*
             //optional 변수는 처음 선언했을 때 기본값은 nil이다.
             var foundIndex: Int?
             
@@ -50,6 +51,11 @@ struct Concentration {
             
             //한 장도 뒤집혀져있지 않은 상황이라면 foundIndex의 초기값인 nil을 반환하게 된다. 한 장이 뒤집혀져있는 상황이라면 foundIndex에 저장해두었던 index가 반환된다.
             return foundIndex
+            */
+            
+            //closure를 사용해 위의 코드를 간단하게 처리한다.
+            //Collection extension에서 만든 oneAndOnly 변수를 사용한다.
+            return cards.indices.filter { cards[$0].isFacedUp }.oneAndOnly
         }
         
         //set은 newValue 값을 기본 인자로 갖는다. 선언해주지않으면 newValue라는 이름으로 인자를 사용할 수 있고, set(a), set(a, b) 등으로 이용할 수도 있다.
@@ -124,5 +130,15 @@ struct Concentration {
             }
         }
         return true
+    }
+}
+
+
+//Collection을 extension
+//Collection으로 구현된 어떤 것(Array, String, Countable Range...)이든 해당 extension을 사용할 수 있다.
+extension Collection {
+    //해당 Collection의 내부의 값이 1개라면 그 값을, 아니면 nil을 리턴한다.
+    var oneAndOnly: Element? {
+        return count == 1 ? first : nil
     }
 }
