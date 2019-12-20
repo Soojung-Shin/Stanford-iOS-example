@@ -8,7 +8,10 @@
 
 import Foundation
 
-struct PlayingCard {
+struct PlayingCard: CustomStringConvertible {
+    //CustomStringConvertible 프로토콜을 이용해 print()를 이용할 때, 설정해둔 형식으로 출력할 수 있다.
+    var description: String { return "\(suit) \(rank)" }
+
     var suit: Suit
     var rank: Rank
     
