@@ -15,7 +15,7 @@ struct PlayingCard: CustomStringConvertible {
     var suit: Suit
     var rank: Rank
     
-    enum Suit: String {
+    enum Suit: String, CustomStringConvertible {
         case spades = "♠️"
         case hearts = "♥️"
         case diamonds = "♦️"
@@ -24,9 +24,11 @@ struct PlayingCard: CustomStringConvertible {
         //모든 값을 가지고 올 것이기 때문에 static 변수로 선언한다.
         //배열에서 타입 지정 안해줬을 때, 맨 앞 요소만 타입을 적어주면 뒤에는 생략해도 된다.
         static var all = [Suit.spades, .hearts, .diamonds, .clubs]
+        
+        var description: String { return rawValue }
     }
     
-    enum Rank {
+    enum Rank: CustomStringConvertible {
         case ace
         case face(String)
         case numeric(Int)
@@ -52,6 +54,14 @@ struct PlayingCard: CustomStringConvertible {
             }
             allRanks += [Rank.face("J"), .face("Q"), .face("K")]
             return allRanks
+        }
+        
+        var description: String {
+            switch self {
+            case .ace: return "a"
+            case .numeric(let pips): return String(pips)
+            case .face(let kind): return kind
+            }
         }
     }
 }
