@@ -53,6 +53,12 @@ class PlayingCardView: UIView {
         label.isHidden = !isFaceUp
     }
     
+    //특성이 바뀌었을 때, redraw한다.
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        setNeedsLayout()
+        setNeedsDisplay()
+    }
+    
     //서브뷰들을 배치하는 메소드. 화면에 변화가 있을 때(가로 모드 등) 시스템에 의해 실행된다.
     override func layoutSubviews() {
         super.layoutSubviews()
