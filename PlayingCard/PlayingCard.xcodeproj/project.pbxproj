@@ -15,6 +15,7 @@
 		B58E559923AD12C5004CF224 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B58E559723AD12C5004CF224 /* LaunchScreen.storyboard */; };
 		B58E55A223AD12F9004CF224 /* PlayingCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B58E55A123AD12F9004CF224 /* PlayingCard.swift */; };
 		B58E55A423AD181C004CF224 /* PlayingCardDeck.swift in Sources */ = {isa = PBXBuildFile; fileRef = B58E55A323AD181C004CF224 /* PlayingCardDeck.swift */; };
+		B5D33DF023AF5AD1000783B0 /* PlayingCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D33DEF23AF5AD1000783B0 /* PlayingCardView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 		B58E559A23AD12C5004CF224 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B58E55A123AD12F9004CF224 /* PlayingCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayingCard.swift; sourceTree = "<group>"; };
 		B58E55A323AD181C004CF224 /* PlayingCardDeck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayingCardDeck.swift; sourceTree = "<group>"; };
+		B5D33DEF23AF5AD1000783B0 /* PlayingCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayingCardView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,6 +64,7 @@
 			children = (
 				B58E55A023AD12D7004CF224 /* Supporting Files */,
 				B58E559023AD12C3004CF224 /* ViewController.swift */,
+				B5D33DEF23AF5AD1000783B0 /* PlayingCardView.swift */,
 				B58E55A123AD12F9004CF224 /* PlayingCard.swift */,
 				B58E55A323AD181C004CF224 /* PlayingCardDeck.swift */,
 				B58E559223AD12C3004CF224 /* Main.storyboard */,
@@ -153,6 +156,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B58E559123AD12C3004CF224 /* ViewController.swift in Sources */,
+				B5D33DF023AF5AD1000783B0 /* PlayingCardView.swift in Sources */,
 				B58E558D23AD12C3004CF224 /* AppDelegate.swift in Sources */,
 				B58E55A423AD181C004CF224 /* PlayingCardDeck.swift in Sources */,
 				B58E55A223AD12F9004CF224 /* PlayingCard.swift in Sources */,
