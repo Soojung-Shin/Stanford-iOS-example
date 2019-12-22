@@ -60,6 +60,10 @@ class PlayingCardView: UIView {
         upperLeftCornerLabel.frame.origin = bounds.offsetBy(dx: 8, dy: 8).origin
         
         configureCornerLabel(lowerRightCornerLabel)
+        //오른쪽 하단에 올 텍스트를 회전시킨다. 이때 해당 뷰의 원점(왼쪽 상단)을 기준으로 회전하기 때문에 위치가 변경될 수 있다. 그래서 원래의 위치에 놓고싶다면 회전과 평행이동을 동시에 해야한다. 맨 오른쪽 아래 점으로 이동시킨 후 파이만큼 회전시키면 원래 위치에서 회전된 모습을 볼 수 있다.
+        lowerRightCornerLabel.transform = CGAffineTransform.identity
+            .translatedBy(x: lowerRightCornerLabel.frame.size.width, y: lowerRightCornerLabel.frame.size.height)
+            .rotated(by: CGFloat.pi)
         lowerRightCornerLabel.frame.origin = bounds.offsetBy(dx: bounds.maxX - lowerRightCornerLabel.frame.size.width - 8, dy: bounds.maxY - lowerRightCornerLabel.frame.size.height - 8).origin
     }
 
