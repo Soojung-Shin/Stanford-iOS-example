@@ -8,11 +8,17 @@
 
 import UIKit
 
+//@IBDesignable을 추가하면 스토리보드에서 코드로 추가한 뷰들을 확인할 수 있다.
+@IBDesignable
 class PlayingCardView: UIView {
     
+    //변수에 @IBInspectable을 추가하면 해당 뷰의 attribute inspector에서 스토리보드에서 값을 변경, 확인할 수 있다.
+    @IBInspectable
     var rank: Int = 5 { didSet { setNeedsDisplay(); setNeedsLayout() } }
+    @IBInspectable
     var suit: String = "♠️" { didSet { setNeedsDisplay(); setNeedsLayout() } }
-    var isFaceUp: Bool = false { didSet { setNeedsDisplay(); setNeedsLayout() } }
+    @IBInspectable
+    var isFaceUp: Bool = true { didSet { setNeedsDisplay(); setNeedsLayout() } }
     
     //입력받은 String을 fontSize 크기로 조절하고, 가운데 정렬된 NSAttributedString으로 반환하는 메소드
     private func centeredAttributedString(_ string: String, fontSize: CGFloat) -> NSAttributedString {
@@ -124,14 +130,15 @@ class PlayingCardView: UIView {
         
         if isFaceUp {
             //카드 가운데에 해당 카드의 숫자에 맞는 이미지를 그린다.
-            if let faceCardImage = UIImage(named: rankString + suit) {
+            //해당 이미지의 in, compatibleWidth 파라미터는 스토리보드에서 UIImage(named:)로 추가된 이미지를 확인하기 위해 추가한 것이다.
+            if let faceCardImage = UIImage(named: rankString + suit, in: Bundle(for: self.classForCoder), compatibleWith: traitCollection) {
                 faceCardImage.draw(in: bounds.zoom(by: SizeRatio.faceCardImageSizeToBoundsSize))
             } else {
                 drawPips()
             }
         } else {
             //카드가 face up 되어있지 않을 경우 카드의 뷰에 꽉차게 뒷면 이미지를 그린다.
-            if let cardBackImage = UIImage(named: "cardback") {
+            if let cardBackImage = UIImage(named: "cardback", in: Bundle(for: self.classForCoder), compatibleWith: traitCollection) {
                 cardBackImage.draw(in: bounds)
             }
         }
