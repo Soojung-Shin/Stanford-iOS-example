@@ -31,6 +31,16 @@ class ViewController: UIViewController {
         }
     }
     
+    //카드를 탭하면 뒤집는 동작을 하는 액션. 제스처를 스토리보드에서 직접 추가해 이렇게 action을 줄 수도 있다.
+    @IBAction func flipCard(_ sender: UITapGestureRecognizer) {
+        //UIGestureRecognizer의 state를 switch로 받아와 각각의 경우에 맞게 처리한다.
+        switch sender.state {
+        case .ended:
+            playingCardView.isFaceUp = !playingCardView.isFaceUp
+        default: break
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         

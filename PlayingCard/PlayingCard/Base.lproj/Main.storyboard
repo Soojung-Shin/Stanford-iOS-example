@@ -18,6 +18,7 @@
                             <view opaque="NO" contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="QDv-5O-ASV" customClass="PlayingCardView" customModule="PlayingCard" customModuleProvider="target">
                                 <rect key="frame" x="20" y="154" width="374" height="598"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <gestureRecognizers/>
                                 <constraints>
                                     <constraint firstAttribute="width" priority="750" constant="800" id="999-OK-xuS"/>
                                     <constraint firstAttribute="width" secondItem="QDv-5O-ASV" secondAttribute="height" multiplier="5:8" id="eVI-3c-Tmm"/>
@@ -28,6 +29,9 @@
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="isFaceUp" value="YES"/>
                                 </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="vph-Kf-HkA" appends="YES" id="eyx-rQ-CZr"/>
+                                </connections>
                             </view>
                         </subviews>
                         <color key="backgroundColor" red="1" green="0.83234566450000003" blue="0.47320586440000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -46,6 +50,11 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="vph-Kf-HkA">
+                    <connections>
+                        <action selector="flipCard:" destination="BYZ-38-t0r" id="3vZ-qW-Xyg"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="137.68115942028987" y="72.991071428571431"/>
         </scene>
