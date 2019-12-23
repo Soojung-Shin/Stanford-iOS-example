@@ -12,7 +12,7 @@ class PlayingCardView: UIView {
     
     var rank: Int = 5 { didSet { setNeedsDisplay(); setNeedsLayout() } }
     var suit: String = "♠️" { didSet { setNeedsDisplay(); setNeedsLayout() } }
-    var isFaceUp: Bool = true { didSet { setNeedsDisplay(); setNeedsLayout() } }
+    var isFaceUp: Bool = false { didSet { setNeedsDisplay(); setNeedsLayout() } }
     
     //입력받은 String을 fontSize 크기로 조절하고, 가운데 정렬된 NSAttributedString으로 반환하는 메소드
     private func centeredAttributedString(_ string: String, fontSize: CGFloat) -> NSAttributedString {
@@ -122,11 +122,18 @@ class PlayingCardView: UIView {
         UIColor.white.setFill()
         roundedRect.fill()
         
-        //카드 가운데에 해당 카드의 숫자에 맞는 이미지를 그린다.
-        if let faceCardImage = UIImage(named: rankString + suit) {
-            faceCardImage.draw(in: bounds.zoom(by: SizeRatio.faceCardImageSizeToBoundsSize))
+        if isFaceUp {
+            //카드 가운데에 해당 카드의 숫자에 맞는 이미지를 그린다.
+            if let faceCardImage = UIImage(named: rankString + suit) {
+                faceCardImage.draw(in: bounds.zoom(by: SizeRatio.faceCardImageSizeToBoundsSize))
+            } else {
+                drawPips()
+            }
         } else {
-            drawPips()
+            //카드가 face up 되어있지 않을 경우 카드의 뷰에 꽉차게 뒷면 이미지를 그린다.
+            if let cardBackImage = UIImage(named: "cardback") {
+                cardBackImage.draw(in: bounds)
+            }
         }
     }
 }
