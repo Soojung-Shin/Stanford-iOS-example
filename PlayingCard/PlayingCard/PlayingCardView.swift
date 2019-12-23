@@ -81,7 +81,7 @@ class PlayingCardView: UIView {
         UIColor.white.setFill()
         roundedRect.fill()
         
-        //카드 중간에 이미지 추가
+        //카드 가운데에 이미지를 추가한다.
         if let faceCardImage = UIImage(named: rankString + suit) {
             faceCardImage.draw(in: bounds.zoom(by: SizeRatio.faceCardImageSizeToBoundsSize))
         }
