@@ -20,6 +20,10 @@ class ViewController: UIViewController {
             swipe.direction = [.left, .right]
             //해당 뷰가 swipe 제스처를 인식할 수 있도록 추가한다.
             playingCardView.addGestureRecognizer(swipe)
+            
+            //카드가 K, Q, J 일 때, pinch 제스처를 통해 카드 중앙의 이미지 크기를 조절한다. 이때 model과의 연결이 필요없는 view 자체의 동작이기 때문에 target은 해당 view가 된다.
+            let pinch = UIPinchGestureRecognizer(target: playingCardView, action: #selector(playingCardView.adjustFaceCardScale(byHandlingGestureRecognizedBy:)))
+            playingCardView.addGestureRecognizer(pinch)
         }
     }
     

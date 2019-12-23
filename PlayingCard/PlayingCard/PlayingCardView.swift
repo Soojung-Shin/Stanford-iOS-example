@@ -20,6 +20,20 @@ class PlayingCardView: UIView {
     @IBInspectable
     var isFaceUp: Bool = true { didSet { setNeedsDisplay(); setNeedsLayout() } }
     
+    //pinch 제스처로 이미지 크기를 조절하기 위해 변수를 추가한다. 중앙 이미지는 layout에 영향을 주는 UI가 아니기 때문에 setNeedsLayout()은 생략한다.
+    var faceCardScale: CGFloat = SizeRatio.faceCardImageSizeToBoundsSize { didSet { setNeedsDisplay() } }
+    
+    //pinch 제스처로 실행되는 핸들러 메소드. pinch 제스처에 따라 카드 중앙의 이미지 크기를 변경한다.
+    @objc func adjustFaceCardScale(byHandlingGestureRecognizedBy recognizer: UIPinchGestureRecognizer) {
+        switch recognizer.state {
+        case .changed, .ended:
+            //pinch의 비율에 따라 faceCardScale 값을 설정한다. 또한 계속 scale을 곱하면 너무 큰 값이 될 수 있으니 매번 pinch recognizer의 scale을 1.0으로 재설정해준다.
+            faceCardScale *= recognizer.scale
+            recognizer.scale = 1.0
+        default: break
+        }
+    }
+    
     //입력받은 String을 fontSize 크기로 조절하고, 가운데 정렬된 NSAttributedString으로 반환하는 메소드
     private func centeredAttributedString(_ string: String, fontSize: CGFloat) -> NSAttributedString {
         var font = UIFont.preferredFont(forTextStyle: .body).withSize(fontSize)
@@ -132,7 +146,7 @@ class PlayingCardView: UIView {
             //카드 가운데에 해당 카드의 숫자에 맞는 이미지를 그린다.
             //해당 이미지의 in, compatibleWidth 파라미터는 스토리보드에서 UIImage(named:)로 추가된 이미지를 확인하기 위해 추가한 것이다.
             if let faceCardImage = UIImage(named: rankString + suit, in: Bundle(for: self.classForCoder), compatibleWith: traitCollection) {
-                faceCardImage.draw(in: bounds.zoom(by: SizeRatio.faceCardImageSizeToBoundsSize))
+                faceCardImage.draw(in: bounds.zoom(by: faceCardScale))
             } else {
                 drawPips()
             }
