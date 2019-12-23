@@ -10,8 +10,8 @@ import UIKit
 
 class PlayingCardView: UIView {
     
-    var rank: Int = 5 { didSet { setNeedsDisplay(); setNeedsLayout() } }
-    var suit: String = "♥️" { didSet { setNeedsDisplay(); setNeedsLayout() } }
+    var rank: Int = 11 { didSet { setNeedsDisplay(); setNeedsLayout() } }
+    var suit: String = "♠️" { didSet { setNeedsDisplay(); setNeedsLayout() } }
     var isFaceUp: Bool = true { didSet { setNeedsDisplay(); setNeedsLayout() } }
     
     //입력받은 String을 fontSize 크기로 조절하고, 가운데 정렬된 NSAttributedString으로 반환하는 메소드
@@ -80,6 +80,11 @@ class PlayingCardView: UIView {
         roundedRect.addClip()
         UIColor.white.setFill()
         roundedRect.fill()
+        
+        //카드 중간에 이미지 추가
+        if let faceCardImage = UIImage(named: rankString + suit) {
+            faceCardImage.draw(in: bounds.zoom(by: SizeRatio.faceCardImageSizeToBoundsSize))
+        }
     }
 }
 
@@ -115,5 +120,13 @@ extension PlayingCardView {
 extension CGPoint {
     func offsetBy(dx: CGFloat, dy: CGFloat) -> CGPoint {
         return CGPoint(x: x + dx, y: y + dy)
+    }
+}
+
+extension CGRect {
+    func zoom(by scale: CGFloat) -> CGRect {
+        let newWidth = width * scale
+        let newHeight = height * scale
+        return insetBy(dx: (width - newWidth) / 2, dy: (height - newHeight) / 2)
     }
 }
