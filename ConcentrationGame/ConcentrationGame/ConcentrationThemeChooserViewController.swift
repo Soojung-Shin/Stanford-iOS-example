@@ -44,7 +44,7 @@ class ConcentrationThemeChooserViewController: UIViewController, UISplitViewCont
         return splitViewController?.viewControllers.last as? ConcentrationViewController
     }
     
-    //마지막으로 segue된 게임 화면 컨트롤러를 저장한다.
+    //마지막으로 segue된 게임 화면 컨트롤러를 저장한다. 네비게이션 뷰의 스택에서 pop 되더라도 힙에 해당 컨트롤러의 정보가 계속 유지되도록 한다.
     private var lastSeguedToConcentrationViewController: ConcentrationViewController?
     
     
