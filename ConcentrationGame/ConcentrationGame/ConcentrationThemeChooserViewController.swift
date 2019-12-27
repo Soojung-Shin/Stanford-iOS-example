@@ -31,7 +31,9 @@ class ConcentrationThemeChooserViewController: UIViewController, UISplitViewCont
         }
     }
     
+    //앱 실행 시작 화면이 디테일뷰가 아닌 마스터뷰로 설정되도록하는 메소드.
     func splitViewController(_ splitViewController: UISplitViewController, collapseSecondary secondaryViewController: UIViewController, onto primaryViewController: UIViewController) -> Bool {
+        //게임 뷰 컨트롤러의 theme 변수가 한 번도 설정되지 않았다면 마스터 뷰가 앞으로 오도록 한다.(return true)
         if let cvc = secondaryViewController as? ConcentrationViewController {
             return cvc.theme == nil
         }
