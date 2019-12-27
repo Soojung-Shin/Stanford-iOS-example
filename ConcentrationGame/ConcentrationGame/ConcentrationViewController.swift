@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ConcentrationViewController: UIViewController {
     
     //외부에서 사용하지않는 변수이기 때문에 private로 설정한다.
     private lazy var game = Concentration(numberOfCardPair: (cardButtons.count + 1) / 2)
@@ -25,7 +25,7 @@ class ViewController: UIViewController {
     //flipCountLabel에 속성이 적용된 String을 text로 설정한다.
     func updateFlipCountLabel() {
         let attributes: [NSAttributedString.Key : Any] = [
-            .strokeColor: UIColor.orange,
+            .strokeColor: UIColor.black,
             .strokeWidth: 5.0
         ]
         
@@ -53,7 +53,7 @@ class ViewController: UIViewController {
     
     //UI 내부의 구현 방식이기 때문에 IBAction도 모두 private로 설정한다.
     @IBAction private func clickCard(_ sender: UIButton) {
-        if let index = cardButtons.firstIndex(of: sender), sender.backgroundColor == .orange {
+        if let index = cardButtons.firstIndex(of: sender), sender.backgroundColor == .blue {
             flipCount += 1
             game.chooseCard(of: index)
             updateViewFromModel()
@@ -92,17 +92,30 @@ class ViewController: UIViewController {
     
     
     private func updateViewFromModel() {
-        for index in cardButtons.indices {
-            let button = cardButtons[index]
-            let card = game.cards[index]
-            
-            if card.isFacedUp {
-                button.setTitle(setEmoji(for: card), for: .normal)
-                button.backgroundColor = .white
-            } else {
-                button.setTitle("", for: .normal)
-                button.backgroundColor = card.isMatched ? .clear : .orange
+        //Prepare 함수는 Outlet이 준비되기 전에 호출된다. 즉, 모든 아울렛들이 nil인 상태이다. 이것들은 다 강제 언래핑 된 옵셔널이기 때문에 할당되기 전에 접근한다면 에러가 날 것이다. 아울렛이 nil이 아닐 때만 실행하도록 조건을 걸어준다.
+        if cardButtons != nil {
+            for index in cardButtons.indices {
+                let button = cardButtons[index]
+                let card = game.cards[index]
+                
+                if card.isFacedUp {
+                    button.setTitle(setEmoji(for: card), for: .normal)
+                    button.backgroundColor = .white
+                } else {
+                    button.setTitle("", for: .normal)
+                    button.backgroundColor = card.isMatched ? .clear : .blue
+                }
             }
+        }
+    }
+    
+    
+    //화면에 표시할 이모지 테마 설정
+    var theme: String? {
+        didSet {
+            emojis = theme ?? ""
+            emojiChoices = [:]
+            updateViewFromModel()
         }
     }
     
