@@ -26,6 +26,7 @@ class ConcentrationThemeChooserViewController: UIViewController, UISplitViewCont
         if let identifier = segue.identifier, identifier == "Choose Theme", let cvc = segue.destination as? ConcentrationViewController {
             if let themeName = (sender as? UIButton)?.currentTitle, let theme = themes[themeName] {
                 cvc.theme = theme
+                lastSeguedToConcentrationViewController = cvc
             }
         }
     }
@@ -35,5 +36,32 @@ class ConcentrationThemeChooserViewController: UIViewController, UISplitViewCont
             return cvc.theme == nil
         }
         return false
+    }
+    
+    private var splitViewDetailConcentrationViewController: ConcentrationViewController? {
+        return splitViewController?.viewControllers.last as? ConcentrationViewController
+    }
+    
+    //마지막으로 segue된 게임 화면 컨트롤러를 저장한다.
+    private var lastSeguedToConcentrationViewController: ConcentrationViewController?
+    
+    
+    //테마를 바꿔도 게임이 매번 새로 시작되지 않게 하는 메소드.
+    @IBAction func changeTheme(_ sender: UIButton) {
+        if let cvc = splitViewDetailConcentrationViewController {
+            //스플릿뷰인 경우, 디테일뷰 컨트롤러를 찾아 디테일뷰의 테마만 변경한다.
+            if let themeName = sender.currentTitle, let theme = themes[themeName] {
+                cvc.theme = theme
+            }
+        } else if let cvc = lastSeguedToConcentrationViewController {
+            //스플릿뷰의 디테일뷰 컨트롤러를 찾지 못하면 마지막으로 segue되었던 뷰 컨트롤러를 찾아 테마를 지정하고, 네비게이션 화면에 push한다.
+            if let themeName = sender.currentTitle, let theme = themes[themeName] {
+                cvc.theme = theme
+            }
+            navigationController?.pushViewController(cvc, animated: true)
+        } else {
+            //스플릿뷰와 마지막으로 segue된 화면을 찾지 못했다면(한번도 segue되지 않은 상태라면), segue를 실행한다. 새로운 mvc 인스턴스가 생성된다.
+            performSegue(withIdentifier: "Choose Theme", sender: sender)
+        }
     }
 }
