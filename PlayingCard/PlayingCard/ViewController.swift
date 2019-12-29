@@ -60,6 +60,7 @@ class ViewController: UIViewController {
         switch recognizer.state {
         case .ended:
             if let chosenCardView = recognizer.view as? PlayingCardView {
+                //카드를 눌렀을 때 세로축을 기준으로 뒤집히는 애니메이션
                 UIView.transition(
                     with: chosenCardView,
                     duration: 0.6,
@@ -70,6 +71,7 @@ class ViewController: UIViewController {
                             return self.cardViews.filter { $0.isFaceUp }
                         }
                         
+                        //뒤집힌 카드가 두장이면 뒷면이 오도록 뒤집는다.
                         if faceUpCardViews.count == 2 {
                             faceUpCardViews.forEach { cardView in
                                 UIView.transition(
