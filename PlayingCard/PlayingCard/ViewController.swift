@@ -10,7 +10,26 @@ import UIKit
 
 class ViewController: UIViewController {
     
+    
+    @IBOutlet var cardViews: [PlayingCardView]!
+    
     var deck = PlayingCardDeck()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        var cards = [PlayingCard]()
+        for _ in 1...((cardViews.count + 1) / 2) {
+            if let card = deck.draw() { cards += [card, card] }
+        }
+        for cardView in cardViews {
+            cardView.isFaceUp = false
+            let card = cards.remove(at: cards.count.arc4random)
+            cardView.suit = card.suit.rawValue
+            cardView.rank = card.rank.order
+            cardView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(flipCard(_:))))
+        }
+    }
 
     //PlayingCardView에 대한 제스처를 추가해주기 위해서 아울렛을 만든다.
     @IBOutlet var playingCardView: PlayingCardView! {
@@ -35,21 +54,36 @@ class ViewController: UIViewController {
         }
     }
     
-    //카드를 탭하면 뒤집는 동작을 하는 액션. 제스처를 스토리보드에서 직접 추가해 이렇게 action을 줄 수도 있다.
-    @IBAction func flipCard(_ sender: UITapGestureRecognizer) {
+    //카드를 탭하면 뒤집는 동작을 하는 액션.
+    @objc func flipCard(_ recognizer: UITapGestureRecognizer) {
         //UIGestureRecognizer의 state를 switch로 받아와 각각의 경우에 맞게 처리한다.
-        switch sender.state {
+        switch recognizer.state {
         case .ended:
-            playingCardView.isFaceUp = !playingCardView.isFaceUp
+            if let chosenCardView = recognizer.view as? PlayingCardView {
+                UIView.transition(
+                    with: chosenCardView,
+                    duration: 0.6,
+                    options: [.transitionFlipFromLeft],
+                    animations: { chosenCardView.isFaceUp = !chosenCardView.isFaceUp },
+                    completion: { position in
+                        var faceUpCardViews: [PlayingCardView] {
+                            return self.cardViews.filter { $0.isFaceUp }
+                        }
+                        
+                        if faceUpCardViews.count == 2 {
+                            faceUpCardViews.forEach { cardView in
+                                UIView.transition(
+                                    with: cardView,
+                                    duration: 0.8,
+                                    options: [.transitionFlipFromLeft],
+                                    animations: { cardView.isFaceUp = false }
+                                )
+                            }
+                        }
+                    }
+                )
+            }
         default: break
         }
     }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-    }
-
-
 }
-
