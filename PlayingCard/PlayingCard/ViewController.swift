@@ -65,6 +65,8 @@ class ViewController: UIViewController {
         switch recognizer.state {
         case .ended:
             if let chosenCardView = recognizer.view as? PlayingCardView {
+                
+                cardBehavior.removeItem(chosenCardView)
                 //카드를 눌렀을 때 세로축을 기준으로 뒤집히는 애니메이션
                 UIView.transition(
                     with: chosenCardView,
@@ -119,7 +121,8 @@ class ViewController: UIViewController {
                                         with: cardView,
                                         duration: 0.8,
                                         options: [.transitionFlipFromLeft],
-                                        animations: { cardView.isFaceUp = false }
+                                        animations: { cardView.isFaceUp = false },
+                                        completion: { finished in self.cardBehavior.addItem(cardView) }
                                     )
                                 }
                             }
