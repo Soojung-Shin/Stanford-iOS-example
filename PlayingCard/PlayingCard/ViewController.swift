@@ -16,21 +16,7 @@ class ViewController: UIViewController {
     
     lazy var animator = UIDynamicAnimator(referenceView: view)
     
-    lazy var collisionBehavior: UICollisionBehavior = {
-        let behavior = UICollisionBehavior()
-        behavior.translatesReferenceBoundsIntoBoundary = true
-        animator.addBehavior(behavior)
-        return behavior
-    }()
-    
-    lazy var itemBehavior: UIDynamicItemBehavior = {
-        let behavior = UIDynamicItemBehavior()
-        behavior.allowsRotation = false
-        behavior.elasticity = 1.0
-        behavior.resistance = 0
-        animator.addBehavior(behavior)
-        return behavior
-    }()
+    lazy var cardBehavior = CardBehavior(in: animator)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,14 +32,7 @@ class ViewController: UIViewController {
             cardView.rank = card.rank.order
             cardView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(flipCard(_:))))
             
-            collisionBehavior.addItem(cardView)
-            itemBehavior.addItem(cardView)
-            
-            let pushBehavior = UIPushBehavior(items: [cardView], mode: .instantaneous)
-            pushBehavior.angle = CGFloat(Int(2 * CGFloat.pi).arc4random) + CGFloat(drand48())
-            pushBehavior.magnitude = 1 + CGFloat(drand48())
-            pushBehavior.action = { self.animator.removeBehavior(pushBehavior) }
-            animator.addBehavior(pushBehavior)
+            cardBehavior.addItem(cardView)
         }
     }
 
