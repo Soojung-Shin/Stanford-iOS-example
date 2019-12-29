@@ -67,19 +67,56 @@ class ViewController: UIViewController {
                     options: [.transitionFlipFromLeft],
                     animations: { chosenCardView.isFaceUp = !chosenCardView.isFaceUp },
                     completion: { position in
+                        
                         var faceUpCardViews: [PlayingCardView] {
-                            return self.cardViews.filter { $0.isFaceUp }
+                            //카드 뷰들 중에서 현재 화면에 있고, 뒤집어져 있는 카드를 반환한다.
+                            return self.cardViews.filter { $0.isFaceUp && !$0.isHidden }
                         }
                         
-                        //뒤집힌 카드가 두장이면 뒷면이 오도록 뒤집는다.
+                        //뒤집힌 카드가 두 장일 때
                         if faceUpCardViews.count == 2 {
-                            faceUpCardViews.forEach { cardView in
-                                UIView.transition(
-                                    with: cardView,
-                                    duration: 0.8,
-                                    options: [.transitionFlipFromLeft],
-                                    animations: { cardView.isFaceUp = false }
+                            //두 카드가 같은 카드라면 커지는 애니메이션 후 작아지면서 사라지도록 한다.
+                            if faceUpCardViews[0].rank == faceUpCardViews[1].rank && faceUpCardViews[0].suit == faceUpCardViews[1].suit {
+                                //카드 뷰 확대 애니메이션
+                                UIViewPropertyAnimator.runningPropertyAnimator(
+                                    withDuration: 0.5,
+                                    delay: 0,
+                                    options: [],
+                                    animations: {
+                                        faceUpCardViews.forEach {
+                                            $0.transform = CGAffineTransform.identity.scaledBy(x: 3.0, y: 3.0)
+                                        }
+                                    },
+                                    completion: { finished in
+                                        //카드 뷰 투명해지면서 작아져 없어지는 애니메이션
+                                        UIViewPropertyAnimator.runningPropertyAnimator(
+                                            withDuration: 0.5,
+                                            delay: 0,
+                                            options: [],
+                                            animations: {
+                                                faceUpCardViews.forEach {
+                                                    $0.transform = CGAffineTransform.identity.scaledBy(x: 0.1, y: 0.1)
+                                                    $0.alpha = 0
+                                                }
+                                            },
+                                            completion: { finished in
+                                                faceUpCardViews.forEach {
+                                                    $0.isHidden = true
+                                                }
+                                            }
+                                        )
+                                    }
                                 )
+                            } else {
+                                //두 카드가 다른 카드일 때, 뒷면이 오도록 뒤집는다.
+                                faceUpCardViews.forEach { cardView in
+                                    UIView.transition(
+                                        with: cardView,
+                                        duration: 0.8,
+                                        options: [.transitionFlipFromLeft],
+                                        animations: { cardView.isFaceUp = false }
+                                    )
+                                }
                             }
                         }
                     }
