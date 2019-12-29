@@ -59,12 +59,17 @@ class ViewController: UIViewController {
         }
     }
     
+    private var faceUpCardViews: [PlayingCardView] {
+        //카드 뷰들 중에서 현재 화면에 있고, 뒤집어져 있는 카드를 반환한다.
+        return self.cardViews.filter { $0.isFaceUp && !$0.isHidden }
+    }
+    
     //카드를 탭하면 뒤집는 동작을 하는 액션.
     @objc func flipCard(_ recognizer: UITapGestureRecognizer) {
         //UIGestureRecognizer의 state를 switch로 받아와 각각의 경우에 맞게 처리한다.
         switch recognizer.state {
         case .ended:
-            if let chosenCardView = recognizer.view as? PlayingCardView {
+            if let chosenCardView = recognizer.view as? PlayingCardView, faceUpCardViews.count < 2 {
                 
                 //애니메이션 중첩으로 애니메이션이 꼬이지 않도록 카드를 선택하면 animationItem을 삭제해 카드 배치 애니메이션의 영향을 받지않도록 한다.
                 cardBehavior.removeItem(chosenCardView)
@@ -76,22 +81,17 @@ class ViewController: UIViewController {
                     animations: { chosenCardView.isFaceUp = !chosenCardView.isFaceUp },
                     completion: { position in
                         
-                        var faceUpCardViews: [PlayingCardView] {
-                            //카드 뷰들 중에서 현재 화면에 있고, 뒤집어져 있는 카드를 반환한다.
-                            return self.cardViews.filter { $0.isFaceUp && !$0.isHidden }
-                        }
-                        
                         //뒤집힌 카드가 두 장일 때
-                        if faceUpCardViews.count == 2 {
+                        if self.faceUpCardViews.count == 2 {
                             //두 카드가 같은 카드라면 커지는 애니메이션 후 작아지면서 사라지도록 한다.
-                            if faceUpCardViews[0].rank == faceUpCardViews[1].rank && faceUpCardViews[0].suit == faceUpCardViews[1].suit {
+                            if self.faceUpCardViews[0].rank == self.faceUpCardViews[1].rank && self.faceUpCardViews[0].suit == self.faceUpCardViews[1].suit {
                                 //카드 뷰 확대 애니메이션
                                 UIViewPropertyAnimator.runningPropertyAnimator(
                                     withDuration: 0.5,
                                     delay: 0,
                                     options: [],
                                     animations: {
-                                        faceUpCardViews.forEach {
+                                        self.faceUpCardViews.forEach {
                                             $0.transform = CGAffineTransform.identity.scaledBy(x: 3.0, y: 3.0)
                                         }
                                     },
@@ -102,13 +102,13 @@ class ViewController: UIViewController {
                                             delay: 0,
                                             options: [],
                                             animations: {
-                                                faceUpCardViews.forEach {
+                                                self.faceUpCardViews.forEach {
                                                     $0.transform = CGAffineTransform.identity.scaledBy(x: 0.1, y: 0.1)
                                                     $0.alpha = 0
                                                 }
                                             },
                                             completion: { finished in
-                                                faceUpCardViews.forEach {
+                                                self.faceUpCardViews.forEach {
                                                     $0.isHidden = true
                                                 }
                                             }
@@ -117,10 +117,10 @@ class ViewController: UIViewController {
                                 )
                             } else {
                                 //두 카드가 다른 카드일 때, 뒷면이 오도록 뒤집는다.
-                                faceUpCardViews.forEach { cardView in
+                                self.faceUpCardViews.forEach { cardView in
                                     UIView.transition(
                                         with: cardView,
-                                        duration: 0.8,
+                                        duration: 0.6,
                                         options: [.transitionFlipFromLeft],
                                         animations: { cardView.isFaceUp = false },
                                         //카드가 다시 배치 애니메이션대로 움직이도록 animationItem을 추가해준다.
