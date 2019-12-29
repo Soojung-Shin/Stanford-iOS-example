@@ -66,6 +66,7 @@ class ViewController: UIViewController {
         case .ended:
             if let chosenCardView = recognizer.view as? PlayingCardView {
                 
+                //애니메이션 중첩으로 애니메이션이 꼬이지 않도록 카드를 선택하면 animationItem을 삭제해 카드 배치 애니메이션의 영향을 받지않도록 한다.
                 cardBehavior.removeItem(chosenCardView)
                 //카드를 눌렀을 때 세로축을 기준으로 뒤집히는 애니메이션
                 UIView.transition(
@@ -122,6 +123,7 @@ class ViewController: UIViewController {
                                         duration: 0.8,
                                         options: [.transitionFlipFromLeft],
                                         animations: { cardView.isFaceUp = false },
+                                        //카드가 다시 배치 애니메이션대로 움직이도록 animationItem을 추가해준다.
                                         completion: { finished in self.cardBehavior.addItem(cardView) }
                                     )
                                 }
