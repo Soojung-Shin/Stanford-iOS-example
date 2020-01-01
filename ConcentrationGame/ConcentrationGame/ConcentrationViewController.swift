@@ -11,7 +11,7 @@ import UIKit
 class ConcentrationViewController: UIViewController {
     
     //외부에서 사용하지않는 변수이기 때문에 private로 설정한다.
-    private lazy var game = Concentration(numberOfCardPair: (cardButtons.count + 1) / 2)
+    private lazy var game = Concentration(numberOfCardPair: (visibleCardButtons.count + 1) / 2)
     
     //몇 번이나 뒤집었는지에 대해서 외부에서 설정할 수 없도록 private(set)으로 설정한다.
     private(set) var flipCount = 0 {
@@ -29,8 +29,15 @@ class ConcentrationViewController: UIViewController {
             .strokeWidth: 5.0
         ]
         
-        let attributedString = NSAttributedString(string: "\(flipCount)", attributes: attributes)
+        //카드 레이아웃을 위해서 아이폰에서 기기가 세로 모드일 때와 가로 모드 일 때 flip count의 라벨을 다르게 설정한다.
+        let attributedString = NSAttributedString(string: traitCollection.verticalSizeClass == .regular ? "flips : \(flipCount)" : "flips\n\(flipCount)", attributes: attributes)
         flipCountLabel.attributedText = attributedString
+    }
+    
+    //trait가 변경되면 호출된다. 기기가 회전하자마자 flipCount 라벨을 바로 변경하기 위해서 update 해준다.
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        updateFlipCountLabel()
     }
         
     //UI 내부의 구현 방식이기 때문에 IBOutlet도 모두 private로 설정한다.
@@ -43,6 +50,15 @@ class ConcentrationViewController: UIViewController {
     @IBOutlet private var cardButtons: [UIButton]!
     @IBOutlet private var resetButton: UIButton!
     
+    private var visibleCardButtons: [UIButton]! {
+        return cardButtons?.filter { !$0.superview!.isHidden }
+    }
+    
+    //사용자가 기기를 회전시켰을 때에도 model이 잘 적용되도록 업데이트한다.
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        updateViewFromModel()
+    }
     
     override func viewDidLoad() {
         updateViewFromModel()
@@ -53,7 +69,7 @@ class ConcentrationViewController: UIViewController {
     
     //UI 내부의 구현 방식이기 때문에 IBAction도 모두 private로 설정한다.
     @IBAction private func clickCard(_ sender: UIButton) {
-        if let index = cardButtons.firstIndex(of: sender), sender.backgroundColor == .blue {
+        if let index = visibleCardButtons.firstIndex(of: sender), sender.backgroundColor == .blue {
             flipCount += 1
             game.chooseCard(of: index)
             updateViewFromModel()
@@ -93,9 +109,9 @@ class ConcentrationViewController: UIViewController {
     
     private func updateViewFromModel() {
         //Prepare 함수는 Outlet이 준비되기 전에 호출된다. 즉, 모든 아울렛들이 nil인 상태이다. 이것들은 다 강제 언래핑 된 옵셔널이기 때문에 할당되기 전에 접근한다면 에러가 날 것이다. 아울렛이 nil이 아닐 때만 실행하도록 조건을 걸어준다.
-        if cardButtons != nil {
-            for index in cardButtons.indices {
-                let button = cardButtons[index]
+        if visibleCardButtons != nil {
+            for index in visibleCardButtons.indices {
+                let button = visibleCardButtons[index]
                 let card = game.cards[index]
                 
                 if card.isFacedUp {
@@ -124,7 +140,7 @@ class ConcentrationViewController: UIViewController {
     //UI 내부의 구현 방식이기 때문에 IBOutlet도 모두 private로 설정한다.
     @IBAction private func clickResetButton(_ sender: UIButton) {
         //모델을 초기화한다.
-        game = Concentration(numberOfCardPair: (cardButtons.count + 1) / 2)
+        game = Concentration(numberOfCardPair: (visibleCardButtons.count + 1) / 2)
         
         flipCount = 0
         emojis = "😈👻🤡🍭🍫😺🎃🍬"
