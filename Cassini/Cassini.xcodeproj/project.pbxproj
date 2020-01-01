@@ -15,6 +15,7 @@
 		B52C4DF323B9D3B200577B36 /* oval.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B52C4DF223B9D3B100577B36 /* oval.jpg */; };
 		B52C4DF523B9D40400577B36 /* ImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52C4DF423B9D40400577B36 /* ImageViewController.swift */; };
 		B52C4DF723B9D5D000577B36 /* DemoURLs.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52C4DF623B9D5D000577B36 /* DemoURLs.swift */; };
+		B564CE2523BB505F0019A076 /* CassiniViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B564CE2423BB505F0019A076 /* CassiniViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 		B52C4DF223B9D3B100577B36 /* oval.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = oval.jpg; sourceTree = "<group>"; };
 		B52C4DF423B9D40400577B36 /* ImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageViewController.swift; sourceTree = "<group>"; };
 		B52C4DF623B9D5D000577B36 /* DemoURLs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoURLs.swift; sourceTree = "<group>"; };
+		B564CE2423BB505F0019A076 /* CassiniViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CassiniViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,6 +64,7 @@
 			children = (
 				B52C4DF123B9D39500577B36 /* Supporting Files */,
 				B52C4DF423B9D40400577B36 /* ImageViewController.swift */,
+				B564CE2423BB505F0019A076 /* CassiniViewController.swift */,
 				B52C4DF623B9D5D000577B36 /* DemoURLs.swift */,
 				B52C4DE323B9D38600577B36 /* Main.storyboard */,
 				B52C4DF223B9D3B100577B36 /* oval.jpg */,
@@ -156,6 +159,7 @@
 				B52C4DF723B9D5D000577B36 /* DemoURLs.swift in Sources */,
 				B52C4DDE23B9D38600577B36 /* AppDelegate.swift in Sources */,
 				B52C4DF523B9D40400577B36 /* ImageViewController.swift in Sources */,
+				B564CE2523BB505F0019A076 /* CassiniViewController.swift in Sources */,
 				B52C4DE023B9D38600577B36 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -18,13 +18,6 @@ class ImageViewController: UIViewController, UIScrollViewDelegate {
         }
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        if imageURL == nil {
-            imageURL = DemoURLs.stanford
-        }
-    }
-    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         if imageView.image == nil {
@@ -41,18 +34,26 @@ class ImageViewController: UIViewController, UIScrollViewDelegate {
         set {
             imageView.image = newValue
             imageView.sizeToFit()
-            scrollView.contentSize = scrollView.frame.size
+            scrollView?.contentSize = scrollView.frame.size
+            spinner?.stopAnimating()
         }
     }
     
     private func fetchImage() {
         if let url = imageURL {
-            let urlContents = try? Data(contentsOf: url)
-            if let urlImage = urlContents {
-                image = UIImage(data: urlImage)
+            spinner?.startAnimating()
+            DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+                let urlContents = try? Data(contentsOf: url)
+                DispatchQueue.main.async {
+                    if let urlImage = urlContents, url == self?.imageURL {
+                        self?.image = UIImage(data: urlImage)
+                    }
+                }
             }
         }
     }
+    
+    @IBOutlet weak var spinner: UIActivityIndicatorView!
     
     @IBOutlet weak var scrollView: UIScrollView! {
         didSet {
