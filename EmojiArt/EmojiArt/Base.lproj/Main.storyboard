@@ -62,17 +62,24 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="byQ-ZK-080">
                                 <rect key="frame" x="0.0" y="0.0" width="990.5" height="1004"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eFN-Nk-WSz" customClass="EmojiArtView" customModule="EmojiArt" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="0.0" width="990.5" height="1004"/>
-                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    </view>
+                                    <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pEb-7n-WzU">
+                                        <rect key="frame" x="0.0" y="0.0" width="991" height="1004"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" priority="250" constant="1004" id="21c-IM-4ib"/>
+                                            <constraint firstAttribute="width" priority="250" constant="991" id="oAl-dF-fQh"/>
+                                        </constraints>
+                                        <viewLayoutGuide key="contentLayoutGuide" id="Xag-Q1-7sj"/>
+                                        <viewLayoutGuide key="frameLayoutGuide" id="Tcq-Ms-NGK"/>
+                                    </scrollView>
                                 </subviews>
-                                <color key="backgroundColor" systemColor="opaqueSeparatorColor" red="0.77647058823529413" green="0.77647058823529413" blue="0.78431372549019607" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="backgroundColor" red="0.92157477139999999" green="0.92155748609999999" blue="0.92156922819999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <constraints>
-                                    <constraint firstAttribute="bottom" secondItem="eFN-Nk-WSz" secondAttribute="bottom" id="0xi-hK-84h"/>
-                                    <constraint firstItem="eFN-Nk-WSz" firstAttribute="leading" secondItem="byQ-ZK-080" secondAttribute="leading" id="Csp-F0-Lfx"/>
-                                    <constraint firstItem="eFN-Nk-WSz" firstAttribute="top" secondItem="byQ-ZK-080" secondAttribute="top" id="JRO-fM-nuR"/>
-                                    <constraint firstAttribute="trailing" secondItem="eFN-Nk-WSz" secondAttribute="trailing" id="See-it-Cu1"/>
+                                    <constraint firstItem="pEb-7n-WzU" firstAttribute="centerY" secondItem="byQ-ZK-080" secondAttribute="centerY" id="7BF-ke-260"/>
+                                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="pEb-7n-WzU" secondAttribute="trailing" id="UVi-Ay-dZL"/>
+                                    <constraint firstItem="pEb-7n-WzU" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="byQ-ZK-080" secondAttribute="leading" id="Vs5-tf-TZg"/>
+                                    <constraint firstItem="pEb-7n-WzU" firstAttribute="top" relation="greaterThanOrEqual" secondItem="byQ-ZK-080" secondAttribute="top" id="XN3-XC-rvf"/>
+                                    <constraint firstItem="pEb-7n-WzU" firstAttribute="centerX" secondItem="byQ-ZK-080" secondAttribute="centerX" id="o1L-xC-6JJ"/>
+                                    <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="pEb-7n-WzU" secondAttribute="bottom" id="yH1-uA-Cc8"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -87,12 +94,14 @@
                     </view>
                     <connections>
                         <outlet property="dropZone" destination="byQ-ZK-080" id="h9O-Md-7Ec"/>
-                        <outlet property="emojiArtView" destination="eFN-Nk-WSz" id="8dw-Kz-pPO"/>
+                        <outlet property="scrollView" destination="pEb-7n-WzU" id="huE-Md-DYO"/>
+                        <outlet property="scrollViewHeight" destination="21c-IM-4ib" id="Udp-8n-x0O"/>
+                        <outlet property="scrollViewWidth" destination="oAl-dF-fQh" id="T2W-A7-7Hh"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-12" y="1900"/>
+            <point key="canvasLocation" x="-12.298682284040995" y="1899.6093749999998"/>
         </scene>
         <!--Split View Controller-->
         <scene sceneID="0Kf-05-xJm">

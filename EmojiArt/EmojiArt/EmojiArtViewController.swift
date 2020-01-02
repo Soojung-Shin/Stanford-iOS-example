@@ -8,7 +8,7 @@
 
 import UIKit
 
-class EmojiArtViewController: UIViewController, UIDropInteractionDelegate {
+class EmojiArtViewController: UIViewController, UIDropInteractionDelegate, UIScrollViewDelegate {
     
     //drop zone 뷰를 연결하고, drop 인터렉션을 추가한다.
     @IBOutlet weak var dropZone: UIView! {
@@ -16,6 +16,50 @@ class EmojiArtViewController: UIViewController, UIDropInteractionDelegate {
             dropZone.addInteraction(UIDropInteraction(delegate: self))
         }
     }
+        
+    var emojiArtView = EmojiArtView()
+    
+    @IBOutlet weak var scrollView: UIScrollView! {
+        didSet {
+            scrollView.minimumZoomScale = 0.1
+            scrollView.maximumZoomScale = 5.0
+            scrollView.delegate = self
+            scrollView.showsVerticalScrollIndicator = false
+            scrollView.showsHorizontalScrollIndicator = false
+            scrollView.addSubview(emojiArtView)
+        }
+    }
+    
+    @IBOutlet weak var scrollViewWidth: NSLayoutConstraint!
+    @IBOutlet weak var scrollViewHeight: NSLayoutConstraint!
+    
+    func scrollViewDidZoom(_ scrollView: UIScrollView) {
+        scrollViewWidth.constant = scrollView.contentSize.width
+        scrollViewHeight.constant = scrollView.contentSize.height
+    }
+    
+    func viewForZooming(in scrollView: UIScrollView) -> UIView? {
+        return emojiArtView
+    }
+    
+    var emojiArtBackgroundImage: UIImage? {
+        get {
+            return emojiArtView.backgroundImage
+        }
+        set {
+            scrollView.zoomScale = 1.0
+            emojiArtView.backgroundImage = newValue
+            let size = newValue?.size ?? CGSize.zero
+            emojiArtView.frame = CGRect(origin: CGPoint.zero, size: size)
+            scrollView.contentSize = size
+            scrollViewWidth.constant = size.width
+            scrollViewHeight.constant = size.height
+            if let dropZone = self.dropZone, size.width > 0, size.height > 0 {
+                scrollView.zoomScale = max(dropZone.bounds.size.width / size.width, dropZone.bounds.size.height / size.height)
+            }
+        }
+    }
+    
     
     func dropInteraction(_ interaction: UIDropInteraction, canHandle session: UIDropSession) -> Bool {
         //session에 NSURL, UIImage를 가지고 올 수 있는지 확인한다.
@@ -32,7 +76,7 @@ class EmojiArtViewController: UIViewController, UIDropInteractionDelegate {
     func dropInteraction(_ interaction: UIDropInteraction, performDrop session: UIDropSession) {
         imageFetcher = ImageFetcher() { (url, image) in
             DispatchQueue.main.async {
-                self.emojiArtView.backgroundImage = image
+                self.emojiArtBackgroundImage = image
             }
         }
         
@@ -52,6 +96,4 @@ class EmojiArtViewController: UIViewController, UIDropInteractionDelegate {
             }
         }
     }
-    
-    @IBOutlet weak var emojiArtView: EmojiArtView!
 }
