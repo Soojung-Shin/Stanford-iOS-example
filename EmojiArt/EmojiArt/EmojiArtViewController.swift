@@ -8,8 +8,8 @@
 
 import UIKit
 
-class EmojiArtViewController: UIViewController, UIDropInteractionDelegate, UIScrollViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
-    
+class EmojiArtViewController: UIViewController, UIDropInteractionDelegate, UIScrollViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UICollectionViewDragDelegate {
+
     //drop zone 뷰를 연결하고, drop 인터렉션을 추가한다.
     @IBOutlet weak var dropZone: UIView! {
         didSet {
@@ -66,6 +66,7 @@ class EmojiArtViewController: UIViewController, UIDropInteractionDelegate, UIScr
         didSet {
             emojiCollectionView.dataSource = self
             emojiCollectionView.delegate = self
+            emojiCollectionView.dragDelegate = self
         }
     }
     
@@ -86,6 +87,31 @@ class EmojiArtViewController: UIViewController, UIDropInteractionDelegate, UIScr
         return cell
     }
     
+    // MARK: - UICollectionViewDragDelegate
+
+    //드래그할 아이템을 지정해주는 메소드.
+    func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
+        return dragItems(at: indexPath)
+    }
+    
+    //드래그 하는 도중에 다른 셀들을 탭하면 드래그 아이템 배열에 아이템을 추가하는 메소드. 드래그 아이템에 탭한 아이템이 추가된다.
+    func collectionView(_ collectionView: UICollectionView, itemsForAddingTo session: UIDragSession, at indexPath: IndexPath, point: CGPoint) -> [UIDragItem] {
+        return dragItems(at: indexPath)
+    }
+
+    //indexPath를 이용해 long press된 cell 안에 있는 label의 attributedString을 가져오고, 그 값을 dragItem 만들어 배열로 리턴한다.
+    private func dragItems(at indexPath: IndexPath) -> [UIDragItem] {
+        if let attributedString = (emojiCollectionView.cellForItem(at: indexPath) as? EmojiCollectionViewCell)?.label.attributedText {
+            let dragItem = UIDragItem(itemProvider: NSItemProvider(object: attributedString))
+            //만약 앱 내에서 앱 내로 드래그 되는 경우, itemProvider와 관련된 복잡한 메소드를 사용하지 않고, 지역화된 객체를 바로 잡을 수 있게 하여 간단하게 구현할 수 있다.
+            dragItem.localObject = attributedString
+            return [dragItem]
+        } else {
+            return []
+        }
+    }
+    
+    // MARK: - UIDropInteractionDelegate
     
     func dropInteraction(_ interaction: UIDropInteraction, canHandle session: UIDropSession) -> Bool {
         //session에 NSURL, UIImage를 가지고 올 수 있는지 확인한다.
