@@ -8,7 +8,7 @@
 
 import UIKit
 
-class EmojiArtViewController: UIViewController, UIDropInteractionDelegate, UIScrollViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UICollectionViewDragDelegate {
+class EmojiArtViewController: UIViewController, UIDropInteractionDelegate, UIScrollViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UICollectionViewDragDelegate, UICollectionViewDropDelegate {
 
     //drop zone 뷰를 연결하고, drop 인터렉션을 추가한다.
     @IBOutlet weak var dropZone: UIView! {
@@ -67,6 +67,7 @@ class EmojiArtViewController: UIViewController, UIDropInteractionDelegate, UIScr
             emojiCollectionView.dataSource = self
             emojiCollectionView.delegate = self
             emojiCollectionView.dragDelegate = self
+            emojiCollectionView.dropDelegate = self
         }
     }
     
@@ -89,8 +90,10 @@ class EmojiArtViewController: UIViewController, UIDropInteractionDelegate, UIScr
     
     // MARK: - UICollectionViewDragDelegate
 
-    //드래그할 아이템을 지정해주는 메소드.
+    //드래그를 시작할 때 호출되는 메소드. 드래그할 아이템을 지정해준다.
     func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
+        //드래그를 시작할 때 session에 localContext를 알려주어 drop할 때 알 수 있게 한다.
+        session.localContext = collectionView
         return dragItems(at: indexPath)
     }
     
@@ -108,6 +111,46 @@ class EmojiArtViewController: UIViewController, UIDropInteractionDelegate, UIScr
             return [dragItem]
         } else {
             return []
+        }
+    }
+    
+    // MARK: - UICollectionViewDropDelegate
+    
+    func collectionView(_ collectionView: UICollectionView, canHandle session: UIDropSession) -> Bool {
+        return session.canLoadObjects(ofClass: NSAttributedString.self)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UICollectionViewDropProposal {
+        //드래그가 컬렉션 뷰 안에서 시작됐는지 확인하고, 안에서 시작됐다면 .move, 밖에서 시작됐다면 .copy 한다.
+        let itSelf = (session.localDragSession?.localContext as? UICollectionView) == collectionView
+        return UICollectionViewDropProposal(operation: itSelf ? .move : .copy, intent: .insertAtDestinationIndexPath)
+    }
+
+    func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
+        //destinationIndexPath가 없다면(컬렉션 뷰의 셀이 아닌 다른 곳에 두었다면) 아이템이 0, 섹션이 0인 IndexPath를 갖는다.
+        let destinationIndexPath = coordinator.destinationIndexPath ?? IndexPath(item: 0, section: 0)
+        
+        //드래그 중인 아이템이 여러개 일 수도 있으니 for문으로 처리한다.
+        for item in coordinator.items {
+            //드래그가 컬렉션 뷰에서 시작됐다면 sourceIndexPath를 받아온다.
+            if let sourceIndexPath = item.sourceIndexPath {
+                if let attributedString = item.dragItem.localObject as? NSAttributedString {
+                    
+                    //뷰와 모델은 항상 동기화 되어야한다. 클로져 안에 있는 작업을 한번에 처리해준다.
+                    collectionView.performBatchUpdates({
+                        //모델에서 드래그한 아이템을 삭제하고, destination 인덱스에 추가한다.
+                        emojis.remove(at: sourceIndexPath.item)
+                        emojis.insert(attributedString.string, at: destinationIndexPath.item)
+                        
+                        //컬렉션 뷰에서 드래그한 아이템을 삭제하고, destination 인덱스에 추가한다.
+                        collectionView.deleteItems(at: [sourceIndexPath])
+                        collectionView.insertItems(at: [destinationIndexPath])
+                    })
+                    
+                    //드랍 애니메이션을 추가한다. 손가락을 떼면 지정된 toItemAt으로 드래그 아이템이 자연스럽게 들어간다.
+                    coordinator.drop(item.dragItem, toItemAt: destinationIndexPath)
+                }
+            }
         }
     }
     
