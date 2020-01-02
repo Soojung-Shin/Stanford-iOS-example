@@ -12,6 +12,15 @@ class EmojiArtDocumentTableViewController: UITableViewController {
     
     //테이블 뷰의 모델로 사용할 변수
     var emojiArtDocuments = ["one", "two", "three"]
+    
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        //splitView에서 왼쪽 뷰가 오른쪽 뷰 위에 올라오도록 한다. 오른쪽 뷰는 부분적으로 보이게 된다. 왼쪽 뷰는 스와이프로 보이고, 없앨 수 있다.
+        if splitViewController?.preferredDisplayMode != .primaryOverlay {
+            splitViewController?.preferredDisplayMode = .primaryOverlay
+        }
+        
+    }
 
     // MARK: - Table view data source
 
