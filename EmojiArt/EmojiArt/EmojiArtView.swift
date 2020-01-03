@@ -10,6 +10,8 @@ import UIKit
 
 class EmojiArtView: UIView, UIDropInteractionDelegate {
     
+    // MARK: - Initialization
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setup()
@@ -23,6 +25,8 @@ class EmojiArtView: UIView, UIDropInteractionDelegate {
     func setup() {
         addInteraction(UIDropInteraction(delegate: self))
     }
+    
+    // MARK: - UIDropInterationDelegate
     
     func dropInteraction(_ interaction: UIDropInteraction, canHandle session: UIDropSession) -> Bool {
         return session.canLoadObjects(ofClass: NSAttributedString.self)
@@ -52,6 +56,8 @@ class EmojiArtView: UIView, UIDropInteractionDelegate {
         label.center = point
         addSubview(label)
     }
+    
+    // MARK: - Drawing the Background
 
     //backgroundImage의 값이 바뀌면 호출 되는 Computed Property를 넣는다. 이미지를 그리도록 setNeedsDisplay() 메소드를 호출한다.
     var backgroundImage: UIImage? { didSet{ setNeedsDisplay() } }

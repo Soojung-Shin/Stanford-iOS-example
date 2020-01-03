@@ -10,19 +10,23 @@ import UIKit
 
 class EmojiArtDocumentTableViewController: UITableViewController {
     
+    // MARK: - Model
+    
     //테이블 뷰의 모델로 사용할 변수
     var emojiArtDocuments = ["one", "two", "three"]
     
-    override func viewWillLayoutSubviews() {
-        super.viewWillLayoutSubviews()
-        //splitView에서 왼쪽 뷰가 오른쪽 뷰 위에 올라오도록 한다. 오른쪽 뷰는 부분적으로 보이게 된다. 왼쪽 뷰는 스와이프로 보이고, 없앨 수 있다.
-        if splitViewController?.preferredDisplayMode != .primaryOverlay {
-            splitViewController?.preferredDisplayMode = .primaryOverlay
-        }
+    // MARK: - Target/Action
+    
+    //오른쪽 상단의 바 버튼을 누르면 emoji art document를 하나 추가한다.
+    @IBAction func newEmojiArt(_ sender: UIBarButtonItem) {
+        //Utilities.swift의 madeUnique 메소드를 사용하여 새로 만든 파일의 이름이 중복되지 않도록 한다. (untitled, 1, 2, 3...)
+        emojiArtDocuments += ["untitled".madeUnique(withRespectTo: emojiArtDocuments)]
         
+        //모델이 업데이트 되었으니 반드시 테이블 뷰도 업데이트 해주어야 한다.
+        tableView.reloadData()
     }
 
-    // MARK: - Table view data source
+    // MARK: - UITableViewDataSource
 
     //테이블 뷰의 섹션 개수를 정하는 메소드
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -44,14 +48,6 @@ class EmojiArtDocumentTableViewController: UITableViewController {
         return cell
     }
     
-    //오른쪽 상단의 바 버튼을 누르면 emoji art document를 하나 추가한다.
-    @IBAction func newEmojiArt(_ sender: UIBarButtonItem) {
-        //Utilities.swift의 madeUnique 메소드를 사용하여 새로 만든 파일의 이름이 중복되지 않도록 한다. (untitled, 1, 2, 3...)
-        emojiArtDocuments += ["untitled".madeUnique(withRespectTo: emojiArtDocuments)]
-        
-        //모델이 업데이트 되었으니 반드시 테이블 뷰도 업데이트 해주어야 한다.
-        tableView.reloadData()
-    }
     
     /*
     //행을 edit(삭제, 추가...) 가능하게 할 것인지 결정하는 메소드. true/false. 기본값은 true이기 때문에 불가능하게 설정할 것이 아니라면 구현하지 않아도 된다.
@@ -99,5 +95,15 @@ class EmojiArtDocumentTableViewController: UITableViewController {
         // Pass the selected object to the new view controller.
     }
     */
-
+    
+    // MARK: - View Controller Lifecycle
+    
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        //splitView에서 왼쪽 뷰가 오른쪽 뷰 위에 올라오도록 한다. 오른쪽 뷰는 부분적으로 보이게 된다. 왼쪽 뷰는 스와이프로 보이고, 없앨 수 있다.
+        if splitViewController?.preferredDisplayMode != .primaryOverlay {
+            splitViewController?.preferredDisplayMode = .primaryOverlay
+        }
+        
+    }
 }

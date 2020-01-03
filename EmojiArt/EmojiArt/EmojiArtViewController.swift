@@ -9,16 +9,16 @@
 import UIKit
 
 class EmojiArtViewController: UIViewController, UIDropInteractionDelegate, UIScrollViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UICollectionViewDragDelegate, UICollectionViewDropDelegate {
-
+    
+    // MARK: - Storyboard
+    
     //drop zone 뷰를 연결하고, drop 인터렉션을 추가한다.
     @IBOutlet weak var dropZone: UIView! {
         didSet {
             dropZone.addInteraction(UIDropInteraction(delegate: self))
         }
     }
-        
-    var emojiArtView = EmojiArtView()
-    
+            
     @IBOutlet weak var scrollView: UIScrollView! {
         didSet {
             scrollView.minimumZoomScale = 0.1
@@ -60,6 +60,10 @@ class EmojiArtViewController: UIViewController, UIDropInteractionDelegate, UIScr
         }
     }
     
+    var emojiArtView = EmojiArtView()
+
+    // MARK: - Emoji Collection View
+    
     var emojis = "😀😇😌😍🥰😘😎🤓😈🌛🌞⭐️🌎🍎🍉🍒🥑⚽️".map { String($0) }
     
     @IBOutlet weak var emojiCollectionView: UICollectionView! {
@@ -71,14 +75,16 @@ class EmojiArtViewController: UIViewController, UIDropInteractionDelegate, UIScr
         }
     }
     
+    private var font: UIFont {
+        return UIFontMetrics(forTextStyle: .body).scaledFont(for: UIFont.preferredFont(forTextStyle: .body)).withSize(64.0)
+    }
+
+    // MARK: - UICollectionViewDataSource
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return emojis.count
     }
     
-    private var font: UIFont {
-        return UIFontMetrics(forTextStyle: .body).scaledFont(for: UIFont.preferredFont(forTextStyle: .body)).withSize(64.0)
-    }
-        
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "EmojiCell", for: indexPath)
         if let emojiCell = cell as? EmojiCollectionViewCell {
