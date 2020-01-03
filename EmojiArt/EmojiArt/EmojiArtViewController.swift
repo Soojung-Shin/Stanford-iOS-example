@@ -116,6 +116,18 @@ class EmojiArtViewController: UIViewController, UIDropInteractionDelegate, UIScr
             if addingEmoji {
                 //이모티콘을 추가하고 있는 중이라면 textField 셀을 반환한다.
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "EmojiInputCell", for: indexPath)
+                if let inputCell = cell as? TextFieldCollectionViewCell {
+                    inputCell.resignationHandler = { [weak self, unowned inputCell] in
+                        //클로저에서 memory cycle이 발생하기 때문에 self를 weak로, inputCell은 반드시 존재하는 상황이기 때문에 unowned로 선언해준다.
+                        if let text = inputCell.textField.text {
+                            //textField에 있는 text를 배열로 만들어서 emojis의 앞에 넣는다.
+                            //uniquified로 배열의 중복된 값을 제거한다.
+                            self?.emojis = (text.map{ String($0) } + self!.emojis).uniquified
+                        }
+                        self?.addingEmoji = false
+                        self?.emojiCollectionView.reloadData()
+                    }
+                }
                 return cell
             } else {
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "AddEmojiButtonCell", for: indexPath)
