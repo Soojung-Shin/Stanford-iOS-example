@@ -78,20 +78,70 @@ class EmojiArtViewController: UIViewController, UIDropInteractionDelegate, UIScr
     private var font: UIFont {
         return UIFontMetrics(forTextStyle: .body).scaledFont(for: UIFont.preferredFont(forTextStyle: .body)).withSize(64.0)
     }
+    
+    //현재 이모티콘을 추가하고있는지 나타낸다.(textfield가 나타나있는지)
+    private var addingEmoji = false
+    
+    @IBAction func addEmoji(_ sender: UIButton) {
+        addingEmoji = true
+        //0번 섹션에 버튼 셀과 텍스트필드 셀을 번갈아서 나타낼 것이기 때문에 섹션을 reload한다.
+        emojiCollectionView.reloadSections(IndexSet(integer: 0))
+    }
 
     // MARK: - UICollectionViewDataSource
     
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 2
+    }
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return emojis.count
+        switch section {
+            case 0: return 1
+            case 1: return emojis.count
+            default: return 0
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "EmojiCell", for: indexPath)
-        if let emojiCell = cell as? EmojiCollectionViewCell {
-            let text = NSAttributedString(string: emojis[indexPath.item], attributes: [.font: font])
-            emojiCell.label.attributedText = text
+        //섹션이 1일 때
+        if indexPath.section == 1 {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "EmojiCell", for: indexPath)
+            if let emojiCell = cell as? EmojiCollectionViewCell {
+                let text = NSAttributedString(string: emojis[indexPath.item], attributes: [.font: font])
+                emojiCell.label.attributedText = text
+            }
+            return cell
+        } else {
+            //섹션이 0일 때
+            if addingEmoji {
+                //이모티콘을 추가하고 있는 중이라면 textField 셀을 반환한다.
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "EmojiInputCell", for: indexPath)
+                return cell
+            } else {
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "AddEmojiButtonCell", for: indexPath)
+                return cell
+            }
         }
-        return cell
+    }
+    
+    // MARK: - UICollectionViewDelegateFlowLayout
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        //EmojiInputCell(textField가 있는 셀)이라면 셀의 가로 사이즈를 더 크게 한다.
+        if indexPath.section == 0 && addingEmoji {
+            return CGSize(width: 300, height: 80)
+        }
+        return CGSize(width: 80, height: 80)
+    }
+    
+    // MARK: - UICollectionViewDelegate
+    
+    //셀을 화면에 표시하기 전에 호출되는 메소드.
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        //TextFieldCollectionViewCell이라면 내부의 textField가 first responder가 되도록 한다.
+        if let inputCell = cell as? TextFieldCollectionViewCell {
+            inputCell.textField.becomeFirstResponder()
+        }
     }
     
     // MARK: - UICollectionViewDragDelegate
@@ -110,7 +160,8 @@ class EmojiArtViewController: UIViewController, UIDropInteractionDelegate, UIScr
 
     //indexPath를 이용해 long press된 cell 안에 있는 label의 attributedString을 가져오고, 그 값을 dragItem 만들어 배열로 리턴한다.
     private func dragItems(at indexPath: IndexPath) -> [UIDragItem] {
-        if let attributedString = (emojiCollectionView.cellForItem(at: indexPath) as? EmojiCollectionViewCell)?.label.attributedText {
+        //addingEmoji 상태일 때는 드래그가 불가능하도록 한다.
+        if !addingEmoji, let attributedString = (emojiCollectionView.cellForItem(at: indexPath) as? EmojiCollectionViewCell)?.label.attributedText {
             let dragItem = UIDragItem(itemProvider: NSItemProvider(object: attributedString))
             //만약 앱 내에서 앱 내로 드래그 되는 경우, itemProvider와 관련된 복잡한 메소드를 사용하지 않고, 지역화된 객체를 바로 잡을 수 있게 하여 간단하게 구현할 수 있다.
             dragItem.localObject = attributedString
@@ -127,9 +178,14 @@ class EmojiArtViewController: UIViewController, UIDropInteractionDelegate, UIScr
     }
     
     func collectionView(_ collectionView: UICollectionView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UICollectionViewDropProposal {
-        //드래그가 컬렉션 뷰 안에서 시작됐는지 확인하고, 안에서 시작됐다면 .move, 밖에서 시작됐다면 .copy 한다.
-        let itSelf = (session.localDragSession?.localContext as? UICollectionView) == collectionView
-        return UICollectionViewDropProposal(operation: itSelf ? .move : .copy, intent: .insertAtDestinationIndexPath)
+        //collectionView의 섹션 1에만 아이템을 드롭할 수 있게 한다.
+        if let indexPath = destinationIndexPath, indexPath.section == 1 {
+            //드래그가 컬렉션 뷰 안에서 시작됐는지 확인하고, 안에서 시작됐다면 .move, 밖에서 시작됐다면 .copy 한다.
+            let itSelf = (session.localDragSession?.localContext as? UICollectionView) == collectionView
+            return UICollectionViewDropProposal(operation: itSelf ? .move : .copy, intent: .insertAtDestinationIndexPath)
+        } else {
+            return UICollectionViewDropProposal(operation: .cancel)
+        }
     }
 
     func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
