@@ -150,6 +150,30 @@ class EmojiArtViewController: UIViewController, UIDropInteractionDelegate, UIScr
                     //드랍 애니메이션을 추가한다. 손가락을 떼면 지정된 toItemAt으로 드래그 아이템이 자연스럽게 들어간다.
                     coordinator.drop(item.dragItem, toItemAt: destinationIndexPath)
                 }
+            } else {
+                //외부 앱에서 드래그 아이템을 가지고오는 경우
+                let placeholderContext = coordinator.drop(
+                    item.dragItem,
+                    to: UICollectionViewDropPlaceholder(
+                        insertionIndexPath: destinationIndexPath,
+                        reuseIdentifier: "DropPlaceholderCell"
+                    )
+                )
+                item.dragItem.itemProvider.loadObject(ofClass: NSAttributedString.self) { (provider, errror) in
+                    DispatchQueue.main.async {
+                        //placeholder를 변경해야하기 때문에 main queue에서 작업한다.
+                        if let attributedString = provider as? NSAttributedString {
+                            //attributedString을 성공적으로 가져왔다면, placeholderContext에게 셀을 교체하라고 한다.
+                            placeholderContext.commitInsertion(dataSourceUpdates: { insertionIndexPath in
+                                self.emojis.insert(attributedString.string, at: insertionIndexPath.item)
+                                //이때 주의할 점은 destinationIndexPath가 아닌 insertIndexPath를 사용해야한다는 것이다. 아이템을 로드하는 시간이 동안 다른 동작으로 인해 컬렉션 뷰나 모델이 변경될 수 있기 때문이다.
+                            })
+                        } else {
+                            //에러가 나서 스트링을 가지고오지 못한 경우 placeholder를 삭제한다.
+                            placeholderContext.deletePlaceholder()
+                        }
+                    }
+                }
             }
         }
     }
