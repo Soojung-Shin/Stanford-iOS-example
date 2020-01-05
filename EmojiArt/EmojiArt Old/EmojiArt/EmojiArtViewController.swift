@@ -85,15 +85,7 @@ class EmojiArtViewController: UIViewController, UIDropInteractionDelegate, UIScr
             }
         }
     }
-    
-    //테스트 하기 위한 코드
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        if let url = try? FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true).appendingPathComponent("Untitled.json") {
-            document = EmojiArtDocument(fileURL: url)
-        }
-    }
-    
+        
     // MARK: - Storyboard
     
     //drop zone 뷰를 연결하고, drop 인터렉션을 추가한다.
