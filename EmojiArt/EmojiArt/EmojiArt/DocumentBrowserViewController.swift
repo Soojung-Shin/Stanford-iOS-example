@@ -19,16 +19,19 @@ class DocumentBrowserViewController: UIDocumentBrowserViewController, UIDocument
         allowsDocumentCreation = false
         allowsPickingMultipleItems = false
         
-        template = try? FileManager.default.url(
-            for: .applicationSupportDirectory,  //파일 앱에서 보이지 않고, 영구적으로 사용할 수 있는 directory이다.
-            in: .userDomainMask,
-            appropriateFor: nil,
-            create: true
-        ).appendingPathComponent("Untitled.json")
-        
-        if template != nil {
-            //FileManager를 이용해 파일을 만든다.
-            allowsDocumentCreation = FileManager.default.createFile(atPath: template!.path, contents: Data())
+        //아이패드 환경에서만 다른 앱을 동시에 띄워 이미지를 가져올 수 있기 때문에, 아이패드에서만 새 document를 만들 수 있도록 설정한다.
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            template = try? FileManager.default.url(
+                for: .applicationSupportDirectory,  //파일 앱에서 보이지 않고, 영구적으로 사용할 수 있는 directory이다.
+                in: .userDomainMask,
+                appropriateFor: nil,
+                create: true
+            ).appendingPathComponent("Untitled.json")
+            
+            if template != nil {
+                //FileManager를 이용해 파일을 만든다.
+                allowsDocumentCreation = FileManager.default.createFile(atPath: template!.path, contents: Data())
+            }
         }
     }
     

@@ -160,6 +160,9 @@ class EmojiArtViewController: UIViewController, UIDropInteractionDelegate, UIScr
             emojiCollectionView.delegate = self
             emojiCollectionView.dragDelegate = self
             emojiCollectionView.dropDelegate = self
+            
+            //UICollectionView의 드래그는 기본적으로 아이패드에서만 가능하고, 아이폰에서는 불가능하게 설정되어있다. 아이폰에서도 가능하도록 true로 바꿔준다.
+            emojiCollectionView.dragInteractionEnabled = true
         }
     }
     
