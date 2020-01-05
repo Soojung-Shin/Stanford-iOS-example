@@ -58,10 +58,20 @@ class EmojiArtViewController: UIViewController, UIDropInteractionDelegate, UIScr
     }
     
     @IBAction func save(_ sender: UIBarButtonItem) {
-        //(테스트) 모델이 JSON으로 정상적으로 인코딩되었다면 콘솔로 출력한다.
         if let json = emojiArt?.json {
-            if let jsonString = String(data: json, encoding: .utf8) {
-                print(jsonString)
+            //파일을 저장할 때는 샌드박스 디렉토리 위치를 확인해야 한다. FileManager를 이용해 Document Directory의 URL을 가져온다.
+            if let url = try? FileManager.default.url(
+                for: .documentDirectory,
+                in: .userDomainMask,
+                appropriateFor: nil,
+                create: true
+            ).appendingPathComponent("Untitled.json"){
+                do {
+                    try json.write(to: url)
+                    print ("saved successfully")
+                } catch let error {
+                    print ("couldn't save \(error)")
+                }
             }
         }
     }
