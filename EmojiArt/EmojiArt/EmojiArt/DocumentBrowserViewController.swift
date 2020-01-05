@@ -16,31 +16,30 @@ class DocumentBrowserViewController: UIDocumentBrowserViewController, UIDocument
         
         delegate = self
         
-        allowsDocumentCreation = true
+        allowsDocumentCreation = false
         allowsPickingMultipleItems = false
         
-        // Update the style of the UIDocumentBrowserViewController
-        // browserUserInterfaceStyle = .dark
-        // view.tintColor = .white
+        template = try? FileManager.default.url(
+            for: .applicationSupportDirectory,  //파일 앱에서 보이지 않고, 영구적으로 사용할 수 있는 directory이다.
+            in: .userDomainMask,
+            appropriateFor: nil,
+            create: true
+        ).appendingPathComponent("Untitled.json")
         
-        // Specify the allowed content types of your application via the Info.plist.
-        
-        // Do any additional setup after loading the view.
+        if template != nil {
+            //FileManager를 이용해 파일을 만든다.
+            allowsDocumentCreation = FileManager.default.createFile(atPath: template!.path, contents: Data())
+        }
     }
     
+    //새로운 document를 위한 빈 템플릿이다.
+    var template: URL?
     
     // MARK: UIDocumentBrowserViewControllerDelegate
     
+    //새로운 document를 만들 때 가져올 document를 설정한다.
     func documentBrowser(_ controller: UIDocumentBrowserViewController, didRequestDocumentCreationWithHandler importHandler: @escaping (URL?, UIDocumentBrowserViewController.ImportMode) -> Void) {
-        let newDocumentURL: URL? = nil
-        
-        // Set the URL for the new document here. Optionally, you can present a template chooser before calling the importHandler.
-        // Make sure the importHandler is always called, even if the user cancels the creation request.
-        if newDocumentURL != nil {
-            importHandler(newDocumentURL, .move)
-        } else {
-            importHandler(nil, .none)
-        }
+        importHandler(template, .copy)
     }
     
     func documentBrowser(_ controller: UIDocumentBrowserViewController, didPickDocumentsAt documentURLs: [URL]) {
@@ -63,13 +62,12 @@ class DocumentBrowserViewController: UIDocumentBrowserViewController, UIDocument
     // MARK: Document Presentation
     
     func presentDocument(at documentURL: URL) {
-        
         let storyBoard = UIStoryboard(name: "Main", bundle: nil)
-//        let documentViewController = storyBoard.instantiateViewController(withIdentifier: "DocumentViewController") as! DocumentViewController
-//        documentViewController.document = Document(fileURL: documentURL)
-//        documentViewController.modalPresentationStyle = .fullScreen
-//        
-//        present(documentViewController, animated: true, completion: nil)
+        let documentVC = storyBoard.instantiateViewController(identifier: "DocumentMVC")
+        if let emojiArtViewController = documentVC.contents as? EmojiArtViewController {
+            emojiArtViewController.document = EmojiArtDocument(fileURL: documentURL)
+        }
+        present(documentVC, animated: true)
     }
 }
 

@@ -71,7 +71,9 @@ class EmojiArtViewController: UIViewController, UIDropInteractionDelegate, UIScr
     //왼쪽 상단의 done 버튼을 누르면 해당 도큐먼트를 저장하고, 닫는다.
     @IBAction func close(_ sender: UIBarButtonItem) {
         save()
-        document?.close()
+        dismiss(animated: true) {
+            self.document?.close()
+        }
     }
     
     //저장되어 있는 JSON 형태의 파일을 불러온다.
