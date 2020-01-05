@@ -57,6 +57,7 @@ class EmojiArtViewController: UIViewController, UIDropInteractionDelegate, UIScr
         }
     }
     
+    //save 버튼을 누르면 해당 EmojiArt 모델을 JSON 파일 형식으로 Document Directory에 저장한다.
     @IBAction func save(_ sender: UIBarButtonItem) {
         if let json = emojiArt?.json {
             //파일을 저장할 때는 샌드박스 디렉토리 위치를 확인해야 한다. FileManager를 이용해 Document Directory의 URL을 가져온다.
