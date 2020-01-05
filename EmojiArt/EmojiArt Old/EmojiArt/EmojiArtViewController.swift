@@ -71,6 +71,12 @@ class EmojiArtViewController: UIViewController, UIDropInteractionDelegate, UIScr
     //왼쪽 상단의 done 버튼을 누르면 해당 도큐먼트를 저장하고, 닫는다.
     @IBAction func close(_ sender: UIBarButtonItem) {
         save()
+        
+        //emojiArt가 비어있지 않다면, 현재 뷰를 저장해 thumbnail로 지정한다.
+        if document?.emojiArt != nil {
+            document?.thumbnail = emojiArtView.snapshot
+        }
+        
         dismiss(animated: true) {
             self.document?.close()
         }
