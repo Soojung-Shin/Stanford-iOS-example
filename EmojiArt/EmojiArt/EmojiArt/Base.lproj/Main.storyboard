@@ -167,6 +167,11 @@
                         <viewLayoutGuide key="safeArea" id="p77-Wd-zv2"/>
                     </view>
                     <navigationItem key="navigationItem" id="RnI-4Z-5rF">
+                        <barButtonItem key="leftBarButtonItem" systemItem="done" id="sPQ-1k-39U">
+                            <connections>
+                                <action selector="close:" destination="eG0-oj-sIM" id="6lT-h8-7sg"/>
+                            </connections>
+                        </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="save" id="E9G-U3-8F3">
                             <connections>
                                 <action selector="save:" destination="eG0-oj-sIM" id="Ser-4a-5nI"/>

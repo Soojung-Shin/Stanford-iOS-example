@@ -61,13 +61,18 @@ class EmojiArtViewController: UIViewController, UIDropInteractionDelegate, UIScr
     var document: EmojiArtDocument?
     
     //save 버튼을 누르면 해당 EmojiArt 모델을 JSON 파일 형식으로 Document Directory에 저장한다.
-    @IBAction func save(_ sender: UIBarButtonItem) {
+    @IBAction func save(_ sender: UIBarButtonItem? = nil) {
         document?.emojiArt = emojiArt
         if document?.emojiArt != nil {
             document?.updateChangeCount(.done)
         }
     }
     
+    //왼쪽 상단의 done 버튼을 누르면 해당 도큐먼트를 저장하고, 닫는다.
+    @IBAction func close(_ sender: UIBarButtonItem) {
+        save()
+        document?.close()
+    }
     
     //저장되어 있는 JSON 형태의 파일을 불러온다.
     override func viewWillAppear(_ animated: Bool) {
@@ -78,6 +83,14 @@ class EmojiArtViewController: UIViewController, UIDropInteractionDelegate, UIScr
                 self.title = self.document?.localizedName
                 self.emojiArt = self.document?.emojiArt
             }
+        }
+    }
+    
+    //테스트 하기 위한 코드
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        if let url = try? FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true).appendingPathComponent("Untitled.json") {
+            document = EmojiArtDocument(fileURL: url)
         }
     }
     
