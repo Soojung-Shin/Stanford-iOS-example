@@ -20,6 +20,15 @@ struct EmojiArt: Codable {
         let size: Int
     }
     
+    //json 데이터를 받아와 디코딩하고, 자기자신에게 넣는 initializer.
+    init?(json: Data) {
+        if let newValue = try? JSONDecoder().decode(EmojiArt.self, from: json) {
+            self = newValue
+        } else {
+            return nil
+        }
+    }
+    
     //해당 모델의 데이터를 JSON으로 인코딩한다.
     var json: Data? {
         return try? JSONEncoder().encode(self)
