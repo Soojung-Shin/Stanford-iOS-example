@@ -57,6 +57,15 @@ class EmojiArtViewController: UIViewController, UIDropInteractionDelegate, UIScr
         }
     }
     
+    @IBAction func save(_ sender: UIBarButtonItem) {
+        //(테스트) 모델이 JSON으로 정상적으로 인코딩되었다면 콘솔로 출력한다.
+        if let json = emojiArt?.json {
+            if let jsonString = String(data: json, encoding: .utf8) {
+                print(jsonString)
+            }
+        }
+    }
+    
     // MARK: - Storyboard
     
     //drop zone 뷰를 연결하고, drop 인터렉션을 추가한다.

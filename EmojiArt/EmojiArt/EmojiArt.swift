@@ -9,15 +9,20 @@
 import Foundation
 
 //모델로 사용할 EmojiArt 구조체이다.
-struct EmojiArt {
+struct EmojiArt: Codable {
     var url: URL
     var emojis = [EmojiInfo]()
     
-    struct EmojiInfo {
+    struct EmojiInfo: Codable {
         let x: Int
         let y: Int
         let text: String
         let size: Int
+    }
+    
+    //해당 모델의 데이터를 JSON으로 인코딩한다.
+    var json: Data? {
+        return try? JSONEncoder().encode(self)
     }
     
     init(url: URL, emojis: [EmojiInfo]) {

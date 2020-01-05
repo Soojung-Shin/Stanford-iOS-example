@@ -61,7 +61,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="byQ-ZK-080">
-                                <rect key="frame" x="0.0" y="88" width="990.5" height="916"/>
+                                <rect key="frame" x="0.0" y="138" width="990.5" height="866"/>
                                 <subviews>
                                     <scrollView verifyAmbiguity="off" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pEb-7n-WzU">
                                         <rect key="frame" x="0.0" y="0.0" width="991" height="916"/>
@@ -84,7 +84,7 @@
                                 </constraints>
                             </view>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="CNL-2R-CNg">
-                                <rect key="frame" x="0.0" y="0.0" width="990.5" height="80"/>
+                                <rect key="frame" x="0.0" y="50" width="990.5" height="80"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="80" id="gFk-3G-FKy"/>
@@ -195,6 +195,13 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
+                    <navigationItem key="navigationItem" id="ovj-bd-zAs">
+                        <barButtonItem key="rightBarButtonItem" systemItem="save" id="TAW-Cx-J0n">
+                            <connections>
+                                <action selector="save:" destination="BYZ-38-t0r" id="TdB-ke-oAF"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="dropZone" destination="byQ-ZK-080" id="h9O-Md-7Ec"/>
                         <outlet property="emojiCollectionView" destination="CNL-2R-CNg" id="UAz-sM-4yV"/>
@@ -205,14 +212,14 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-12.298682284040995" y="1899.6093749999998"/>
+            <point key="canvasLocation" x="681.69838945827223" y="1899.6093749999998"/>
         </scene>
         <!--Split View Controller-->
         <scene sceneID="0Kf-05-xJm">
             <objects>
                 <splitViewController id="9HG-H8-LV7" sceneMemberID="viewController">
                     <connections>
-                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="detailViewController" id="PtN-py-fpp"/>
+                        <segue destination="zSA-BT-PhX" kind="relationship" relationship="detailViewController" id="PtN-py-fpp"/>
                         <segue destination="AZi-LS-K3y" kind="relationship" relationship="masterViewController" id="P58-Yc-1ta"/>
                     </connections>
                 </splitViewController>
@@ -237,6 +244,24 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cWS-MU-rz5" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-12" y="966"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="KrC-GG-TZD">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="zSA-BT-PhX" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="POe-Of-JQs">
+                        <rect key="frame" x="0.0" y="0.0" width="990.5" height="50"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="l2f-Kq-kk0"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="BM1-Ld-mmZ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-12.298682284040995" y="1899.6093749999998"/>
         </scene>
     </scenes>
     <resources>
