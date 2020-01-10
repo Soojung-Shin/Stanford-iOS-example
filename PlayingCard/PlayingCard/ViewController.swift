@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreMotion
 
 class ViewController: UIViewController {
     
@@ -34,6 +35,43 @@ class ViewController: UIViewController {
             
             cardBehavior.addItem(cardView)
         }
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        //해당 기기에서 Accelreometer를 사용할 수 있다면 중력 CoreMotion을 설정해준다.
+        if CMMotionManager.shared.isAccelerometerAvailable {
+            //cardBehavior의 gravityBehavior의 magnitude를 0에서 1.0으로 바꿔 기능을 켜준다.
+            cardBehavior.gravityBehavior.magnitude = 1.0
+            
+            //정보를 업데이트 할 간격을 정한다.
+            CMMotionManager.shared.accelerometerUpdateInterval = 1/10
+            
+            //클로저를 설정한다.
+            CMMotionManager.shared.startAccelerometerUpdates(to: .main) { (data, error) in
+                if var x = data?.acceleration.x, var y = data?.acceleration.y {
+                    //기기의 왼쪽 상단 좌표가 (0,0)이기 때문에 중력이 아래로 향하면 0을 향해 간다. 기기의 아래쪽으로 향하도록 보이게 x, y값을 바꿔준다.
+                    switch UIDevice.current.orientation {
+                    case .portrait: y *= -1
+                    case .portraitUpsideDown: break
+                    case .landscapeLeft: swap(&x, &y)
+                    case .landscapeRight: swap(&x, &y); y *= -1
+                    default: x = 0; y = 0
+                    }
+                    self.cardBehavior.gravityBehavior.gravityDirection = CGVector(dx: x, dy: y)
+                } else {
+                    print(error!.localizedDescription)
+                }
+            }
+        }
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        cardBehavior.gravityBehavior.magnitude = 0
+        CMMotionManager.shared.stopAccelerometerUpdates()
     }
 
     //PlayingCardView에 대한 제스처를 추가해주기 위해서 아울렛을 만든다.
