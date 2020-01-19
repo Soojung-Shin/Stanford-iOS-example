@@ -1,5 +1,5 @@
 # Stanford iOS11 example
- '[스탠포드]Swift를 활용한 iOS11 앱 개발' 프로젝트 입니다.
+ Developing iOS 11 Apps with Swift 예제 프로젝트
 
 1. Concentration Game
 
